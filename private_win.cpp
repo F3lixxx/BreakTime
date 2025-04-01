@@ -7,6 +7,7 @@ private_win::private_win(QWidget *parent)
 {
     this->setWindowState(Qt::WindowMaximized);
     ui->setupUi(this);
+    setWindowFlags(Qt::FramelessWindowHint);
 }
 
 private_win::~private_win()
