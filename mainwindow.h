@@ -22,17 +22,24 @@ public:
 
     void newWindow();
 
+signals:
+    void breakTime(int breakMin);
+
 
 private slots:
     void on_pb_open_clicked();
 
     void on_pb_start_clicked();
 
+    void breaktimefunc();
+
 private:
     Ui::MainWindow *ui;
     private_win *new_Win;
     QTimer *timerDown;
     QTime time_updown;
+    bool ok;
     int min;
+    int breakMins;
 };
 #endif // MAINWINDOW_H

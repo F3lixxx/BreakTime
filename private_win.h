@@ -2,6 +2,8 @@
 #define PRIVATE_WIN_H
 
 #include <QDialog>
+#include <QTimer>
+#include <QTime>
 
 namespace Ui {
 class private_win;
@@ -15,8 +17,17 @@ public:
     explicit private_win(QWidget *parent = nullptr);
     ~private_win();
 
+public slots:
+    void timeforBreak(int time);
+
+    void timeDown();
+
 private:
     Ui::private_win *ui;
+    QTimer *timerDown;
+    QTime break_updown;
+    bool ok;
+    int min;
 };
 
 #endif // PRIVATE_WIN_H
