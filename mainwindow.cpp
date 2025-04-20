@@ -8,11 +8,15 @@ MainWindow::MainWindow(QWidget *parent)
 {
     min = 0;
     breakMins = 0;
+    countTime = 0;
     ui->setupUi(this);
     new_Win = new private_win;
     timerDown = new QTimer(this);
     connect(timerDown, SIGNAL(timeout()), this, SLOT(on_pb_open_clicked()));
     connect(this, &MainWindow::breakTime, new_Win, &private_win::timeforBreak);
+    howmuchBreaktime();
+
+    qDebug() << "how much" <<countTime;
 }
 
 void MainWindow::on_pb_open_clicked(){
@@ -22,7 +26,6 @@ void MainWindow::on_pb_open_clicked(){
         breaktimefunc();
         return;
     }
-
     // Уменьшаем время на одну секунду
     time_updown = time_updown.addSecs(-1);
     ui->lb_qtime->setText(time_updown.toString("mm:ss"));
@@ -68,5 +71,13 @@ void MainWindow::breaktimefunc()
     emit breakTime(breakMins);  // Отправляем сигнал
 }
 
-
+void MainWindow::howmuchBreaktime()
+{
+    countTime = ui->le_count->text().toInt();
+    while (countTime != 0){
+        on_pb_open_clicked();
+        countTime--;
+    }
+    qDebug() << "how much" <<countTime;
+}
 

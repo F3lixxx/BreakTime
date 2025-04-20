@@ -21,6 +21,7 @@ public:
     ~MainWindow();
 
     void newWindow();
+    void howmuchBreaktime();
 
 signals:
     void breakTime(int breakMin);
@@ -41,5 +42,6 @@ private:
     bool ok;
     int min;
     int breakMins;
+    int countTime;
 };
 #endif // MAINWINDOW_H

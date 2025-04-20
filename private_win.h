@@ -4,6 +4,9 @@
 #include <QDialog>
 #include <QTimer>
 #include <QTime>
+#include <QFile>
+#include <QProcess>
+#include <QDir>
 
 namespace Ui {
 class private_win;

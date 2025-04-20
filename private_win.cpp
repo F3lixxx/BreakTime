@@ -7,8 +7,6 @@ private_win::private_win(QWidget *parent)
     , break_updown(0,0,0)
 {
     ui->setupUi(this);
-    this->setWindowState(Qt::WindowMaximized);
-    setWindowFlags(Qt::FramelessWindowHint);
 
     min = 0;
     timerDown = new QTimer(this);
@@ -22,6 +20,16 @@ private_win::~private_win()
 
 void private_win::timeforBreak(int time)
 {
+    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    this->showFullScreen();     // Полноэкранный режим
+    this->activateWindow();
+    this->raise();
+    this->activateWindow();
+    this->grabKeyboard();
+    this->setCursor(Qt::BlankCursor);
+    setFocusPolicy(Qt::NoFocus);
+    setFocus();
+
     break_updown = QTime(0, time, 0);
     ui->lb_timeDown->setText(break_updown.toString("Осталось времени на перерыв: mm:ss"));
     timerDown->start(1000);
@@ -32,6 +40,8 @@ void private_win::timeDown()
     if (break_updown == QTime(0, 0, 0)) {
         timerDown->stop();
         this->close();
+        this->releaseKeyboard();
+        this->unsetCursor();
         return;
     }
 

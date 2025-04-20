@@ -18,6 +18,9 @@
     <item row="1" column="0">
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
+       <widget class="QLineEdit" name="le_count"/>
+      </item>
+      <item>
        <widget class="QLineEdit" name="le_time">
         <property name="inputMask">
          <string/>
@@ -67,7 +70,7 @@
      <x>0</x>
      <y>0</y>
      <width>757</width>
-     <height>21</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>
