@@ -20,17 +20,19 @@ private_win::~private_win()
 
 void private_win::timeforBreak(int time)
 {
-    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    QFont sizeFont = ui->lb_timeDown->font();
+    // this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     this->showFullScreen();     // Полноэкранный режим
-    this->activateWindow();
     this->raise();
     this->activateWindow();
     this->grabKeyboard();
     this->setCursor(Qt::BlankCursor);
-    setFocusPolicy(Qt::NoFocus);
-    setFocus();
+    // setFocusPolicy(Qt::NoFocus);
+    // setFocus();
 
     break_updown = QTime(0, time, 0);
+    sizeFont.setPixelSize(70);
+    ui->lb_timeDown->setFont(sizeFont);
     ui->lb_timeDown->setText(break_updown.toString("Осталось времени на перерыв: mm:ss"));
     timerDown->start(1000);
 }
@@ -42,9 +44,15 @@ void private_win::timeDown()
         this->close();
         this->releaseKeyboard();
         this->unsetCursor();
+        emit timebreakstop(true);
         return;
     }
 
     break_updown = break_updown.addSecs(-1);
     ui->lb_timeDown->setText(break_updown.toString("Осталось времени на перерыв: mm:ss"));
 }
+
+
+
+
+

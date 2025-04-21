@@ -7,6 +7,7 @@
 #include <QFile>
 #include <QProcess>
 #include <QDir>
+#include <QFont>
 
 namespace Ui {
 class private_win;
@@ -20,10 +21,15 @@ public:
     explicit private_win(QWidget *parent = nullptr);
     ~private_win();
 
+signals:
+    void timebreakstop(bool stop);
+
 public slots:
     void timeforBreak(int time);
 
     void timeDown();
+
+    // void stopbreak();
 
 private:
     Ui::private_win *ui;

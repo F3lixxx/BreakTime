@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QTimer>
 #include <QTime>
+#include <QIntValidator>
+#include <QBrush>
+#include <QPalette>
 #include "private_win.h"
 
 QT_BEGIN_NAMESPACE
@@ -21,7 +24,6 @@ public:
     ~MainWindow();
 
     void newWindow();
-    void howmuchBreaktime();
 
 signals:
     void breakTime(int breakMin);
@@ -34,12 +36,19 @@ private slots:
 
     void breaktimefunc();
 
+    void stopSignal(bool timeStop);
+
+
+
+    void on_pb_reset_clicked();
+
 private:
     Ui::MainWindow *ui;
     private_win *new_Win;
     QTimer *timerDown;
     QTime time_updown;
     bool ok;
+    bool running = false;
     int min;
     int breakMins;
     int countTime;

@@ -40,7 +40,14 @@
       <item>
        <widget class="QPushButton" name="pb_start">
         <property name="text">
-         <string>Start</string>
+         <string>Старт</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pb_reset">
+        <property name="text">
+         <string>Сброс</string>
         </property>
        </widget>
       </item>
@@ -70,7 +77,7 @@
      <x>0</x>
      <y>0</y>
      <width>757</width>
-     <height>23</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

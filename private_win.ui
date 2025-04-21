@@ -16,8 +16,15 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QLabel" name="lb_timeDown">
+     <property name="styleSheet">
+      <string notr="true">QLabel
+{
+color: white;
+background-color:(169,169,169)
+}</string>
+     </property>
      <property name="text">
-      <string/>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
