@@ -24,6 +24,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         private_win.h private_win.cpp private_win.ui
+        declensionspinbox.h declensionspinbox.cpp
+
+
 
 
     )

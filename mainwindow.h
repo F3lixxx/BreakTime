@@ -7,6 +7,10 @@
 #include <QIntValidator>
 #include <QBrush>
 #include <QPalette>
+#include <QSpinBox>
+#include <QTextEdit>
+#include <QHBoxLayout>
+#include "declensionspinbox.h"
 #include "private_win.h"
 
 QT_BEGIN_NAMESPACE
@@ -38,8 +42,6 @@ private slots:
 
     void stopSignal(bool timeStop);
 
-
-
     void on_pb_reset_clicked();
 
 private:
@@ -47,6 +49,10 @@ private:
     private_win *new_Win;
     QTimer *timerDown;
     QTime time_updown;
+    declensionSpinBox *sb_count;
+    QTextEdit *te_count;
+    QHBoxLayout *lo_horizontal;
+    QFont sizeText;
     bool ok;
     bool running = false;
     int min;

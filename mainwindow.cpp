@@ -11,11 +11,36 @@ MainWindow::MainWindow(QWidget *parent)
     breakMins = 0;
     countTime = 0;
     ui->pb_reset->hide();
+    lo_horizontal = new QHBoxLayout(this);
+    sb_count = new declensionSpinBox(this);
+    te_count = new QTextEdit(this);
+    te_count->setReadOnly(true);
+    te_count->setFontPointSize(16);
+    te_count->setText("Выберите повтор перерывов: ");
+    te_count->setAlignment(Qt::AlignCenter);
+
+    //счет времени сколько раз нужно перезапускать программу
+    lo_horizontal->addWidget(te_count);
+    lo_horizontal->addWidget(sb_count);
+    ui->verticalLayout->insertLayout(0, lo_horizontal);
+    sb_count->setRange(0, 24);
+    sb_count->setWordForms({"час", "часа", "часов"});
+
+    //сколько минут сидеть перед компом
+    ui->sb_time->setSuffix(" минут");
+    ui->sb_time->setRange(0, 60);
+    ui->sb_time->setSingleStep(1);
+    qDebug() << ui->sb_time->value();
+
+
+    // //сколько минут сделать перерыв
+    ui->sb_break->setSuffix(" минут");
+    ui->sb_break->setRange(0, 60);
+    ui->sb_break->setSingleStep(1);
+    qDebug() << ui->sb_break->value();
+
     new_Win = new private_win;
     timerDown = new QTimer(this);
-    ui->le_time->setValidator(new QIntValidator(1, 1440, this));
-    ui->le_break->setValidator(new QIntValidator(1, 1440, this));
-    ui->le_count->setValidator(new QIntValidator(1, 24, this));
     connect(timerDown, SIGNAL(timeout()), this, SLOT(on_pb_open_clicked()));
     connect(this, &MainWindow::breakTime, new_Win, &private_win::timeforBreak);
     connect(new_Win, &private_win::timebreakstop, this, &MainWindow::stopSignal);
@@ -25,9 +50,9 @@ void MainWindow::on_pb_open_clicked(){
     if (time_updown == QTime(0, 0, 0)) {
         timerDown->stop();
         breaktimefunc();
-        ui->le_count->setEnabled(true);
-        ui->le_time->setEnabled(true);
-        ui->le_break->setEnabled(true);
+        sb_count->setEnabled(true);
+        ui->sb_time->setEnabled(true);
+        ui->sb_break->setEnabled(true);
         ui->pb_start->setEnabled(true);
         return;
     }
@@ -40,9 +65,9 @@ void MainWindow::on_pb_open_clicked(){
     running = true;
 
     //блок кнопок и лэйблов для редавктирования
-    ui->le_count->setEnabled(false);
-    ui->le_time->setEnabled(false);
-    ui->le_break->setEnabled(false);
+    sb_count->setEnabled(false);
+    ui->sb_time->setEnabled(false);
+    ui->sb_break->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -52,22 +77,23 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pb_start_clicked()
 {
-    min = ui->le_time->text().toInt(&ok);
-
+    min = ui->sb_time->value();
+    qDebug() << "minutes: " << min;
     if (!ok || min <= 0) {
         qDebug() << "Некорректное значение минут";
         ui->lb_qtime->setText("Ошибка: введите положительное число.");
         return;
     }
 
-    breakMins = ui->le_break->text().toInt(&ok);
+    breakMins = ui->sb_break->value();
     if (!ok || breakMins <= 0) {
         qDebug() << "Некорректное значение перерыва";
-        ui->le_break->setText("Некорректное значение перерыва");
+        ui->lb_qtime->setText("Некорректное значение перерыва");
         return;
     }
 
     if(running){
+        ui->pb_start->setText("Старт");
         timerDown->stop();
         running = false;
     }else if(!running){
@@ -86,7 +112,8 @@ void MainWindow::breaktimefunc()
 
 void MainWindow::stopSignal(bool timeStop)
 {
-    countTime = ui->le_count->text().toInt(&ok);
+    countTime = sb_count->value();
+    qDebug() << "time break: " << countTime;
 
     if (!ok || countTime <= 0) {
         qDebug() << "Некорректное значение количества циклов";
@@ -106,9 +133,9 @@ void MainWindow::stopSignal(bool timeStop)
     } else {
         qDebug() << "Все циклы завершены!";
         currentCycle = 0;  // сбрасываем на будущее
-        ui->le_count->setEnabled(true);
-        ui->le_time->setEnabled(true);
-        ui->le_break->setEnabled(true);
+        sb_count->setEnabled(true);
+        ui->sb_time->setEnabled(true);
+        ui->sb_break->setEnabled(true);
         ui->pb_start->setEnabled(true);
     }
 }
@@ -120,10 +147,9 @@ void MainWindow::on_pb_reset_clicked()
     ui->lb_qtime->setText(time_updown.toString("Таймер сброшен, настрой его заново"));
     ui->pb_reset->hide();
     ui->pb_start->setText("Старт");
-    ui->le_count->setEnabled(true);
-    ui->le_time->setEnabled(true);
-    ui->le_break->setEnabled(true);
+    sb_count->setEnabled(true);
+    ui->sb_time->setEnabled(true);
+    ui->sb_break->setEnabled(true);
     ui->pb_start->setEnabled(true);
     running = false;
 }
-
