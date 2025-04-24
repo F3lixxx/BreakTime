@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget *parent)
     lo_horizontal->addWidget(te_count);
     lo_horizontal->addWidget(sb_count);
     ui->verticalLayout->insertLayout(0, lo_horizontal);
-    sb_count->setRange(0, 24);
-    sb_count->setWordForms({"час", "часа", "часов"});
+    sb_count->setRange(0, 1440);
+    sb_count->setWordForms({"раз", "раза", "разов"});
 
     //сколько минут сидеть перед компом
     ui->sb_time->setSuffix(" минут");
