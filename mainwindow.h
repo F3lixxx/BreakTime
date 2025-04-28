@@ -53,7 +53,6 @@ private:
     QTextEdit *te_count;
     QHBoxLayout *lo_horizontal;
     QFont sizeText;
-    bool ok;
     bool running = false;
     int min;
     int breakMins;

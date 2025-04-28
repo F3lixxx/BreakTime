@@ -50,6 +50,8 @@ void MainWindow::on_pb_open_clicked(){
     if (time_updown == QTime(0, 0, 0)) {
         timerDown->stop();
         breaktimefunc();
+        ui->pb_start->setText("Старт");
+        ui->pb_reset->hide();
         sb_count->setEnabled(true);
         ui->sb_time->setEnabled(true);
         ui->sb_break->setEnabled(true);
@@ -79,16 +81,25 @@ void MainWindow::on_pb_start_clicked()
 {
     min = ui->sb_time->value();
     qDebug() << "minutes: " << min;
-    if (!ok || min <= 0) {
+    if (min <= 0) {
         qDebug() << "Некорректное значение минут";
         ui->lb_qtime->setText("Ошибка: введите положительное число.");
         return;
     }
 
     breakMins = ui->sb_break->value();
-    if (!ok || breakMins <= 0) {
+    if (breakMins <= 0) {
         qDebug() << "Некорректное значение перерыва";
         ui->lb_qtime->setText("Некорректное значение перерыва");
+        return;
+    }
+
+    countTime = sb_count->value();
+    qDebug() << "time break: " << countTime;
+
+    if (countTime <= 0) {
+        qDebug() << "Некорректное значение количества циклов";
+        ui->lb_qtime->setText("Некорректное значение циклов");
         return;
     }
 
@@ -112,13 +123,14 @@ void MainWindow::breaktimefunc()
 
 void MainWindow::stopSignal(bool timeStop)
 {
-    countTime = sb_count->value();
-    qDebug() << "time break: " << countTime;
+    // countTime = sb_count->value();
+    // qDebug() << "time break: " << countTime;
 
-    if (!ok || countTime <= 0) {
-        qDebug() << "Некорректное значение количества циклов";
-        return;
-    }
+    // if (countTime <= 0) {
+    //     qDebug() << "Некорректное значение количества циклов";
+    //     ui->lb_qtime->setText("Некорректное значение перерыва");
+    //     return;
+    // }
 
     static int currentCycle = 0;
     currentCycle++;

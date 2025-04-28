@@ -8,6 +8,8 @@
 #include <QProcess>
 #include <QDir>
 #include <QFont>
+#include <QCloseEvent>
+#include <QKeyEvent>
 
 namespace Ui {
 class private_win;
@@ -29,7 +31,7 @@ public slots:
 
     void timeDown();
 
-    // void stopbreak();
+    void closeEvent(QCloseEvent *event) override;
 
 private:
     Ui::private_win *ui;
