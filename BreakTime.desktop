@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=BreakTime
+Comment=Timer for work breaks
+Exec=BreakTime
+Icon=system-run  # Используем стандартную системную иконку
+Terminal=false
+Categories=Utility;

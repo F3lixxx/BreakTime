@@ -17,7 +17,7 @@ private_win::~private_win()
     delete ui;
 }
 
-void private_win::timeforBreak(int time)
+void private_win::timeforBreak(int time, QString todo)
 {
     QFont sizeFont = ui->lb_timeDown->font();
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
@@ -30,8 +30,10 @@ void private_win::timeforBreak(int time)
     setFocusPolicy(Qt::NoFocus);
     setFocus();
 
-    qDebug() << "здесь по факту долджно отрыкться окно на " << time << " минут";
+    ui->lb_todo->setText(todo);
 
+    qDebug() << "здесь по факту долджно отрыкться окно на " << time << " минут";
+    qDebug() << "todo из главного окна " << todo;
     break_updown = QTime(0, time, 0);
     sizeFont.setPixelSize(70);
     ui->lb_timeDown->setFont(sizeFont);

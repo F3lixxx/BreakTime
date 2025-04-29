@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QString>
 #include <QTimer>
 #include <QTime>
 #include <QIntValidator>
@@ -30,7 +31,7 @@ public:
     void newWindow();
 
 signals:
-    void breakTime(int breakMin);
+    void breakTime(int breakMin, QString todo);
 
 
 private slots:
@@ -53,6 +54,7 @@ private:
     QTextEdit *te_count;
     QHBoxLayout *lo_horizontal;
     QFont sizeText;
+    QString todo;
     bool running = false;
     int min;
     int breakMins;

@@ -94,6 +94,8 @@ void MainWindow::on_pb_start_clicked()
         return;
     }
 
+    todo = ui->le_todo->text();
+
     countTime = sb_count->value();
     qDebug() << "time break: " << countTime;
 
@@ -118,7 +120,8 @@ void MainWindow::on_pb_start_clicked()
 
 void MainWindow::breaktimefunc()
 {
-    emit breakTime(breakMins);  // Отправляем сигнал
+    emit breakTime(breakMins, todo);  // Отправляем сигнал
+    qDebug() << "minutes" << breakMins << "  \n todo list in main: " << todo;
 }
 
 void MainWindow::stopSignal(bool timeStop)

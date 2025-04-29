@@ -31,6 +31,13 @@ background-color:(169,169,169)
      </property>
     </widget>
    </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="lb_todo">
+     <property name="text">
+      <string>TextLabel</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>

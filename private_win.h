@@ -27,7 +27,7 @@ signals:
     void timebreakstop(bool stop);
 
 public slots:
-    void timeforBreak(int time);
+    void timeforBreak(int time, QString todo);
 
     void timeDown();
 
