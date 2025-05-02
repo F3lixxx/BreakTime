@@ -24,8 +24,8 @@ protected:
 
         if (lastTwo >= 11 && lastTwo <= 14) {
             word = wordForms.value(2, ""); // форма "минут"
-        } else if (lastDigit == 1) {
-            word = wordForms.value(0, ""); // форма "минута"
+        } else if (lastDigit == 0 || lastDigit == 1) {
+            word = wordForms.value(0, ""); // форма "раз"
         } else if (lastDigit >= 2 && lastDigit <= 4) {
             word = wordForms.value(1, ""); // форма "минуты"
         } else {

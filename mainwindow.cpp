@@ -11,31 +11,32 @@ MainWindow::MainWindow(QWidget *parent)
     breakMins = 0;
     countTime = 0;
     ui->pb_reset->hide();
+    ui->le_todo->hide();
     lo_horizontal = new QHBoxLayout(this);
     sb_count = new declensionSpinBox(this);
     te_count = new QTextEdit(this);
     te_count->setReadOnly(true);
-    te_count->setFontPointSize(16);
-    te_count->setText("Выберите повтор перерывов: ");
+    te_count->setFontPointSize(20);
+    te_count->setText("Количество перерывов: ");
     te_count->setAlignment(Qt::AlignCenter);
 
     //счет времени сколько раз нужно перезапускать программу
     lo_horizontal->addWidget(te_count);
     lo_horizontal->addWidget(sb_count);
     ui->verticalLayout->insertLayout(0, lo_horizontal);
-    sb_count->setRange(0, 1440);
+    sb_count->setRange(1, 1440);
     sb_count->setWordForms({"раз", "раза", "разов"});
 
     //сколько минут сидеть перед компом
-    ui->sb_time->setSuffix(" минут");
-    ui->sb_time->setRange(0, 60);
+    ui->sb_time->setSuffix(" мин");
+    ui->sb_time->setRange(1, 60);
     ui->sb_time->setSingleStep(1);
     qDebug() << ui->sb_time->value();
 
 
     // //сколько минут сделать перерыв
-    ui->sb_break->setSuffix(" минут");
-    ui->sb_break->setRange(0, 60);
+    ui->sb_break->setSuffix(" мин");
+    ui->sb_break->setRange(1, 60);
     ui->sb_break->setSingleStep(1);
     qDebug() << ui->sb_break->value();
 
@@ -126,14 +127,6 @@ void MainWindow::breaktimefunc()
 
 void MainWindow::stopSignal(bool timeStop)
 {
-    // countTime = sb_count->value();
-    // qDebug() << "time break: " << countTime;
-
-    // if (countTime <= 0) {
-    //     qDebug() << "Некорректное значение количества циклов";
-    //     ui->lb_qtime->setText("Некорректное значение перерыва");
-    //     return;
-    // }
 
     static int currentCycle = 0;
     currentCycle++;

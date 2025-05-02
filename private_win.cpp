@@ -17,7 +17,7 @@ private_win::~private_win()
     delete ui;
 }
 
-void private_win::timeforBreak(int time, QString todo)
+void private_win::timeforBreak(int time, const QString &todo)
 {
     QFont sizeFont = ui->lb_timeDown->font();
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
@@ -27,10 +27,12 @@ void private_win::timeforBreak(int time, QString todo)
     this->activateWindow();
     this->grabKeyboard();
     this->setCursor(Qt::BlankCursor);
-    setFocusPolicy(Qt::NoFocus);
-    setFocus();
+    // setFocusPolicy(Qt::NoFocus);
+    // setFocus();
 
+    currentDoing = todo;
     ui->lb_todo->setText(todo);
+
 
     qDebug() << "здесь по факту долджно отрыкться окно на " << time << " минут";
     qDebug() << "todo из главного окна " << todo;
@@ -45,6 +47,14 @@ void private_win::timeDown()
 {
     if (break_updown == QTime(0, 0, 0)) {
         timerDown->stop();
+        //добавление выполнения задач во время перерыва пока что не надо активировать
+           // int n = QMessageBox::question(this, "Do it?", currentDoing, QMessageBox::Yes, QMessageBox::No);
+           //  if(!n){
+           //      ui->lb_todo->setText(currentDoing);
+           //  }else{
+           //      ui->lb_todo->clear();
+           //  }
+
         this->close();
         this->releaseKeyboard();
         this->unsetCursor();

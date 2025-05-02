@@ -8,6 +8,7 @@
 #include <QProcess>
 #include <QDir>
 #include <QFont>
+#include <QMessageBox>
 #include <QCloseEvent>
 #include <QKeyEvent>
 
@@ -27,7 +28,7 @@ signals:
     void timebreakstop(bool stop);
 
 public slots:
-    void timeforBreak(int time, QString todo);
+    void timeforBreak(int time, const QString &todo);
 
     void timeDown();
 
@@ -39,6 +40,7 @@ private:
     QTime break_updown;
     bool ok;
     int min;
+    QString currentDoing;
 };
 
 #endif // PRIVATE_WIN_H
