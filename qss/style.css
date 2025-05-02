@@ -1,0 +1,84 @@
+/* Общее для окна */
+QWidget {
+    background-color: #2B2B2B;
+    color: #E0E0E0;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 16px;
+}
+
+/* Заголовок */
+QLabel#titleLabel {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+/* Карточки (QFrame или QWidget-контейнеры) */
+QFrame, QWidget#card {
+    background-color: #3A3A3A;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+/* SpinBox */
+QSpinBox {
+    background-color: #3A3A3A;
+    color: #E0E0E0;
+    border: 1px solid #4A4A4A;
+    border-radius: 8px;
+    padding: 6px 8px;
+}
+
+/* Поле для текста */
+QLineEdit, QTextEdit {
+    background-color: #3A3A3A;
+    color: #E0E0E0;
+    border: 1px solid #4A4A4A;
+    border-radius: 8px;
+    padding: 6px 8px;
+}
+
+/* Таймер */
+QLabel#timerLabel {
+    font-size: 48px;
+    font-weight: bold;
+    color: #FFFFFF;
+    margin: 24px 0;
+}
+
+/* Кнопки */
+QPushButton {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: #FFFFFF;
+    font-size: 16px;
+}
+
+/* Кнопка Старт */
+QPushButton#startButton {
+    background-color: #4CAF50;
+}
+
+QPushButton#startButton:hover {
+    background-color: #45A049;
+}
+
+/* Кнопка Пауза */
+QPushButton#pauseButton {
+    background-color: #FFC107;
+    color: #2B2B2B;
+}
+
+QPushButton#pauseButton:hover {
+    background-color: #FFB300;
+}
+
+/* Кнопка Сброс */
+QPushButton#resetButton {
+    background-color: #F44336;
+}
+
+QPushButton#resetButton:hover {
+    background-color: #E53935;
+}

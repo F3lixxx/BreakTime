@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     min = 0;
     breakMins = 0;
     countTime = 0;
-    ui->pb_reset->hide();
+    // ui->pb_reset->hide();
     ui->le_todo->hide();
     lo_horizontal = new QHBoxLayout(this);
     sb_count = new declensionSpinBox(this);
