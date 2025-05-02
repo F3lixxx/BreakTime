@@ -47,14 +47,6 @@ void private_win::timeDown()
 {
     if (break_updown == QTime(0, 0, 0)) {
         timerDown->stop();
-        //добавление выполнения задач во время перерыва пока что не надо активировать
-           // int n = QMessageBox::question(this, "Do it?", currentDoing, QMessageBox::Yes, QMessageBox::No);
-           //  if(!n){
-           //      ui->lb_todo->setText(currentDoing);
-           //  }else{
-           //      ui->lb_todo->clear();
-           //  }
-
         this->close();
         this->releaseKeyboard();
         this->unsetCursor();

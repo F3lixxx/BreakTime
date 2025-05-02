@@ -3,29 +3,22 @@ QWidget {
     background-color: #2B2B2B;
     color: #E0E0E0;
     font-family: 'Segoe UI', sans-serif;
-    font-size: 16px;
 }
+
 
 /* Заголовок */
-QLabel#titleLabel {
-    font-size: 24px;
+QLabel#lb_planner {
+/*    font-size: 18px;*/
     font-weight: bold;
     color: #FFFFFF;
-}
-
-/* Карточки (QFrame или QWidget-контейнеры) */
-QFrame, QWidget#card {
-    background-color: #3A3A3A;
-    border-radius: 12px;
-    padding: 12px;
 }
 
 /* SpinBox */
 QSpinBox {
     background-color: #3A3A3A;
     color: #E0E0E0;
-    border: 1px solid #4A4A4A;
-    border-radius: 8px;
+/*    border: 1px solid #4A4A4A;
+    border-radius: 8px;*/
     padding: 6px 8px;
 }
 
@@ -33,13 +26,13 @@ QSpinBox {
 QLineEdit, QTextEdit {
     background-color: #3A3A3A;
     color: #E0E0E0;
-    border: 1px solid #4A4A4A;
-    border-radius: 8px;
-    padding: 6px 8px;
+/*    border: 1px solid #4A4A4A;
+    border-radius: 8px;*/
+    padding: 6px 6px;
 }
 
 /* Таймер */
-QLabel#timerLabel {
+QLabel#lb_qtime {
     font-size: 48px;
     font-weight: bold;
     color: #FFFFFF;
@@ -48,37 +41,35 @@ QLabel#timerLabel {
 
 /* Кнопки */
 QPushButton {
-    border: none;
-    border-radius: 8px;
+    border: 1px solid #4A4A4A;
+    border-radius: 8px;    
     padding: 10px 20px;
-    color: #FFFFFF;
+    color: #E0E0E0;
     font-size: 16px;
 }
 
 /* Кнопка Старт */
-QPushButton#startButton {
-    background-color: #4CAF50;
+QPushButton#pb_start {
+    border-radius: 12px;
+    padding: 12px;
+    background-color: #1E5945;
 }
 
-QPushButton#startButton:hover {
-    background-color: #45A049;
+QPushButton#pb_start:hover {
+    background-color: #0E8518;
 }
 
-/* Кнопка Пауза */
-QPushButton#pauseButton {
-    background-color: #FFC107;
-    color: #2B2B2B;
-}
-
-QPushButton#pauseButton:hover {
-    background-color: #FFB300;
+QPushButton#pb_start:pressed{
+    background-color: ##00CF00;
 }
 
 /* Кнопка Сброс */
-QPushButton#resetButton {
-    background-color: #F44336;
+QPushButton#pb_reset{
+    background-color: #0E8518;
+    color: #252522
 }
 
-QPushButton#resetButton:hover {
-    background-color: #E53935;
+QPushButton#pb_reset:hover {
+    background-color: #A0A011;
+    color: #252522
 }

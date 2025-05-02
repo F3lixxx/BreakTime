@@ -51,6 +51,7 @@ private:
     QTimer *timerDown;
     QTime time_updown;
     declensionSpinBox *sb_count;
+    QTextEdit *te_work;
     QTextEdit *te_count;
     QHBoxLayout *lo_horizontal;
     QFont sizeText;
