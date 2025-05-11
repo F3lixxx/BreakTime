@@ -51,8 +51,15 @@ private:
     QTimer *timerDown;
     QTime time_updown;
     declensionSpinBox *sb_count;
-    QTextEdit *te_work;
     QTextEdit *te_count;
+    QTextEdit *te_work_time;
+    QTextEdit *te_break_time;
+    QSpinBox *sb_work_time;
+    QSpinBox *sb_break_time;
+    QPushButton *pb_start_stop;
+    QPushButton *pb_reset;
+    QLabel *lb_planner;
+    QLabel *lb_time;
     QHBoxLayout *lo_horizontal;
     QFont sizeText;
     QString todo;

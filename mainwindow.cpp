@@ -1,3 +1,4 @@
+
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
@@ -10,95 +11,64 @@ MainWindow::MainWindow(QWidget *parent)
     min = 0;
     breakMins = 0;
     countTime = 0;
-    // ui->pb_reset->hide();
+    te_work_time = ui->te_time;
+    te_break_time = ui->te_break;
+    sb_work_time = ui->sb_time;
+    sb_break_time = ui->sb_break;
+    pb_start_stop = ui->pb_start;
+    pb_reset = ui->pb_reset;
+    lb_planner = ui->lb_planner;
+    lb_time = ui->lb_qtime;
     ui->le_todo->hide();
-    lo_horizontal = new QHBoxLayout(this);
     sb_count = new declensionSpinBox(this);
     te_count = new QTextEdit(this);
-    te_work = new QTextEdit(this);
 
     //стиль для layout'ов
     // 1. Создаем контейнер
     QWidget *container = new QWidget;
     QHBoxLayout *layout = new QHBoxLayout(container);
-    QVBoxLayout *lo_vertical = new QVBoxLayout(this);
+    QWidget *container_hor = new QWidget;
+    lo_horizontal = new QHBoxLayout(container_hor);
+    QWidget *container_vert = new QWidget;
+    QVBoxLayout *lo_vertical = new QVBoxLayout(container_vert);
 
     // 2. Настраиваем виджеты
     te_count->setReadOnly(true);
     te_count->setFontPointSize(18);
     te_count->setText("Количество перерывов: ");
     te_count->setAlignment(Qt::AlignCenter);
+    te_count->setMinimumSize(500, 60);
 
+    sb_count->setFixedSize(120, 60);
+    sb_count->setWordForms({"раз", "раза", "раз"});
     sb_count->setRange(1, 1440);
-    sb_count->setWordForms({"раз", "раза", "разов"});
+    QLineEdit *le_edit = sb_count->getlineEdit();
+    if(le_edit){
+         le_edit->setReadOnly(true);
+    }
+    sb_count->setMaximumSize(1000,100);
 
     // 3. Добавляем виджеты в layout контейнера
     layout->addWidget(te_count);
     layout->addWidget(sb_count);
+    lo_horizontal->addWidget(te_work_time);
+    lo_horizontal->addWidget(sb_work_time);
+    lo_vertical->addWidget(te_break_time);
 
     // 4. Устанавливаем имя и стиль для контейнера
-    container->setObjectName("hl_work");
-    container->setStyleSheet(R"(
-    #hl_work {
-        background-color: #333;
-        border: 2px solid #4A4A4A;
-        border-radius: 8px;
-        padding: 10px 20px;
-    }
-    #hl_work QLabel {
-        color: #E0E0E0;
-        font-size: 16px;
-        padding: 10px;
-    }
-
-    #hl_work QTextEdit,
-    #hl_work QSpinBox {
-        background-color: transparent; /* Убираем фон */
-        border: none; /* Убираем границу */
-        color: white; /* Возвращаем стандартный цвет текста */
-    }
-    QSpinBox::up-button,
-    QSpinBox::down-button {
-        background-color: #555; /* Цвет кнопок */
-        width: 10px;
-        height: 10px;
-        border: 1px solid #777;
-        border-radius: 3px;
-        margin: 2px;
-    }
-    QSpinBox::up-arrow {
-        image: url(:/qt-project.org/styles/commonstyle/images/up-16.png); /* Qt встроенная иконка вверх */
-    }
-
-    QSpinBox::down-arrow {
-        image: url(:/qt-project.org/styles/commonstyle/images/down-16.png); /* Qt встроенная иконка вниз */
-    }
-
-    /* Наведение */
-    QSpinBox::up-button:hover {
-        background-color: #888;
-    }
-
-    QSpinBox::down-button:hover {
-        background-color: #888;
-    }
-)");
+    container->setObjectName("count_break");
+    container_vert->setObjectName("wigdets");
 
     // 5. Добавляем ВЕСЬ контейнер в основной verticalLayout
     ui->verticalLayout->insertWidget(0, container); // insertWidget, а не insertLayout
+    ui->verticalLayout->insertWidget(1, container_hor);
+    ui->verticalLayout->insertWidget(2, container_vert);
 
     //сколько минут сидеть перед компом
     ui->sb_time->setSuffix(" мин");
     ui->sb_time->setRange(1, 60);
     ui->sb_time->setSingleStep(1);
     qDebug() << ui->sb_time->value();
-
-    te_work->setReadOnly(true);
-    te_work->setFontPointSize(18);
-    te_work->setText("Время работы: ");
-    te_work->setAlignment(Qt::AlignCenter);
-    lo_vertical->addWidget(te_work);
-    ui->verticalLayout->insertWidget(1, te_work);
 
     // //сколько минут сделать перерыв
     ui->sb_break->setSuffix(" мин");

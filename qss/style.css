@@ -1,33 +1,86 @@
 /* Общее для окна */
 QWidget {
-    background-color: #2B2B2B;
+    background-color: #1f2225;
     color: #E0E0E0;
     font-family: 'Segoe UI', sans-serif;
+}
+
+#hl_work {
+    background-color: transparent;
+    padding: 10px 100px;
+}
+
+QTextEdit[myCustom="true"],
+QSpinBox[myCustom="true"] {
+    background-color: #24282b;
+/*    border: 2px solid #4A4A4A;*/
+/*    border-radius: 8px;*/
+    color: white;
+    font-size: 16px;
+}
+
+#count_break {
+    background-color: #24282b;
+    border: 2px solid #202324;
+    border-radius: 8px;
+    padding: 10px 100px;
+}
+#count_break QLabel {
+    color: #E0E0E0;
+    font-size: 16px;
+    padding: 100px;
+}
+
+#count_break QTextEdit,
+#count_break QSpinBox {
+    background-color: transparent; /* Убираем фон */
+    border: none; /* Убираем границу */
+    color: white; /* Возвращаем стандартный цвет текста */
+    font-size: 16px;
+}
+QSpinBox::up-button,
+QSpinBox::down-button {
+    background-color: #24272c;
+    border: 1px solid #4A4A4A;
+    width: 25px;
+    height: 25px;
+    margin: 2px;
+    border-radius: 5px;
+}
+
+#count_break QSpinBox::up-button {
+    subcontrol-origin: margin;
+    subcontrol-position: center right;
+    image: url(:/new/stylesheets/qss/right_arrow.png);
+}
+
+#count_break QSpinBox::down-button {
+    subcontrol-origin: margin;
+    subcontrol-position: center left;
+    image: url(:/new/stylesheets/qss/left_arrow.png);
+}
+
+/* Наведение */
+#count_break QSpinBox::up-button:hover,
+#count_break QSpinBox::down-button:hover {
+    background-color: #d75654;
 }
 
 
 /* Заголовок */
 QLabel#lb_planner {
-/*    font-size: 18px;*/
+    font-size: 50px;
     font-weight: bold;
     color: #FFFFFF;
 }
 
-/* SpinBox */
-QSpinBox {
-    background-color: #3A3A3A;
-    color: #E0E0E0;
-/*    border: 1px solid #4A4A4A;
-    border-radius: 8px;*/
-    padding: 6px 8px;
-}
-
 /* Поле для текста */
-QLineEdit, QTextEdit {
-    background-color: #3A3A3A;
+QLineEdit {
+/*    background-color: #3A3A3A;*/
     color: #E0E0E0;
-/*    border: 1px solid #4A4A4A;
-    border-radius: 8px;*/
+/*    border: 1px solid #4A4A4A;*/
+    border: none;
+/*    border-radius: 8px;*/
     padding: 6px 6px;
 }
 
@@ -43,33 +96,68 @@ QLabel#lb_qtime {
 QPushButton {
     border: 1px solid #4A4A4A;
     border-radius: 8px;    
-    padding: 10px 20px;
+    padding: 10px 50px;
     color: #E0E0E0;
     font-size: 16px;
 }
 
 /* Кнопка Старт */
 QPushButton#pb_start {
+    border: 1px solid #4A4A4A;
     border-radius: 12px;
-    padding: 12px;
-    background-color: #1E5945;
+    background-color: #374c45;
+    padding: 12px;    
+    max-width:126px;
 }
 
 QPushButton#pb_start:hover {
-    background-color: #0E8518;
+    background-color: #375245;
 }
 
 QPushButton#pb_start:pressed{
-    background-color: ##00CF00;
+    background-color: #00CF00;
 }
 
 /* Кнопка Сброс */
 QPushButton#pb_reset{
-    background-color: #0E8518;
-    color: #252522
+    border: 1px solid #4A4A4A;
+    border-radius: 12px;
+    background-color: #935654;
+    color: #252522;
+    padding: 12px;
+    max-width:126px;
+    margin-left: 15px; /* для управление расположением */
 }
 
 QPushButton#pb_reset:hover {
-    background-color: #A0A011;
-    color: #252522
+    background-color: #ab5654;
+    color: #252522;
+}
+
+QSpinBox::up-button,
+QSpinBox::down-button {
+    background-color: #24272c;
+    border: 1px solid #4A4A4A;
+    width: 25px;
+    height: 25px;
+    margin: 2px;
+    border-radius: 5px;
+}
+
+ QSpinBox::up-button {
+    subcontrol-origin: margin;
+    subcontrol-position: center right;
+    image: url(:/new/stylesheets/qss/right_arrow.png);
+}
+
+ QSpinBox::down-button {
+    subcontrol-origin: margin;
+    subcontrol-position: center left;
+    image: url(:/new/stylesheets/qss/left_arrow.png);
+}
+
+/* Наведение */
+ QSpinBox::up-button:hover,
+ QSpinBox::down-button:hover {
+    background-color: #d75654;
 }

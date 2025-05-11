@@ -2,6 +2,7 @@
 #define DECLENSIONSPINBOX_H
 
 #include <QSpinBox>
+#include <QLineEdit>
 #include <QStringList>
 
 class declensionSpinBox : public QSpinBox
@@ -9,11 +10,14 @@ class declensionSpinBox : public QSpinBox
     Q_OBJECT
 public:
     declensionSpinBox(QWidget *parent = nullptr) : QSpinBox(parent) {}
-
     void setWordForms(const QStringList &forms) {
         // forms должен быть размером 3: ["минута", "минуты", "минут"]
         wordForms = forms;
     }
+
+    QLineEdit *getlineEdit() const{
+        return QSpinBox::lineEdit();
+    };
 
 protected:
     QString textFromValue(int value) const override {
@@ -37,5 +41,6 @@ protected:
 
 private:
     QStringList wordForms;
+    QLineEdit *edit;
 };
 #endif // DECLENSIONSPINBOX_H

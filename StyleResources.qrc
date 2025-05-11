@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/new/stylesheets">
         <file>qss/style.css</file>
+        <file>qss/left_arrow.png</file>
+        <file>qss/right_arrow.png</file>
     </qresource>
 </RCC>
