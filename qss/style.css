@@ -1,0 +1,95 @@
+/* Общее для окна */
+QWidget {
+    background-color: #1f2225;
+    color: #E0E0E0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+#pairRepeats{
+    background-color: #24282b;
+    border: 2px solid #4A4A4A;
+    border-radius: 8px;
+}
+#pairWorkTime{
+    background-color: #24282b;
+    border: 2px solid #4A4A4A;
+    border-radius: 8px;
+}
+#pairBreakTime{
+    background-color: #24282b;
+    border: 2px solid #4A4A4A;
+    border-radius: 8px;
+}
+
+#central_widget QLabel {
+    background-color: transparent; /* Убираем фон */
+    color: #E0E0E0;
+    font-size: 40px;
+}
+
+#central_widget QTextEdit,
+#central_widget QSpinBox {
+    background-color: transparent; /* Убираем фон */
+    border: none; /* Убираем границу */
+    color: white; /* Возвращаем стандартный цвет текста */
+    font-size: 16px;
+}
+
+QSpinBox::up-button,
+QSpinBox::down-button {
+    background-color: #24272c;
+    border: 1px solid #4A4A4A;
+    width: 25px;
+    height: 25px;
+    margin: 2px;
+    border-radius: 5px;
+}
+
+/* Кнопка Старт */
+QPushButton#pb_start_stop {
+    border: 1px solid #4A4A4A;
+    border-radius: 12px;
+    background-color: #374c45;
+    padding: 12px;
+    max-width:126px;
+}
+
+QPushButton#pb_start_stop:hover {
+    background-color: #375245;
+}
+
+QPushButton#pb_start_stop:pressed{
+    background-color: #00CF00;
+}
+
+/* Кнопка Сброс */
+QPushButton#pb_reset{
+    border: 1px solid #4A4A4A;
+    border-radius: 12px;
+    background-color: #935654;
+    padding: 12px;
+    max-width:126px;
+    margin-left: 15px; /* для управление расположением */
+}
+
+QPushButton#pb_reset:hover {
+    background-color: #ab5654;
+}
+
+ QSpinBox::up-button {
+    subcontrol-origin: margin;
+    subcontrol-position: center right;
+    image: url(:/styles/qss/right_arrow.png);
+}
+
+ QSpinBox::down-button {
+    subcontrol-origin: margin;
+    subcontrol-position: center left;
+    image: url(:/styles/qss/left_arrow.png);
+}
+
+/* Наведение */
+ QSpinBox::up-button:hover,
+ QSpinBox::down-button:hover {
+    background-color: #d75654;
+}
