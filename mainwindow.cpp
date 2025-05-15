@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     , time_updown(0,0,0)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Break Time");
     min = 0;
     breakMins = 0;
     countTime = 0;
@@ -24,6 +25,40 @@ MainWindow::MainWindow(QWidget *parent)
     central_widget = new QWidget(this); //центральный виджет
     lo_widgetsBorder = new QVBoxLayout();
     lo_buttons_h = new QHBoxLayout(); //Четвёртый горизонтальный layout (кнопки)
+
+    // /* Работа с иконкой трея, устанавливаем иконку из набора системных иконок,
+    //  * а также задаем всплывающую подсказку
+    //  * */
+    // trayIcon = new QSystemTrayIcon(this);
+    // trayIcon->setIcon(this->style()->standardIcon(QStyle::SP_ComputerIcon));
+    // trayIcon->setToolTip("Tray Program" "\n"
+    //                      "Работа со сворачиванием программы трей");
+    // /* После чего создаем контекстное меню из двух пунктов*/
+    // QMenu * menu = new QMenu(this);
+    // QAction * viewWindow = new QAction(("Развернуть программу"), this);
+    // QAction * quitAction = new QAction(("Выход"), this);
+
+    // /* подключаем сигналы нажатий на пункты меню к соответсвующим слотам.
+    //  * Первый пункт меню разворачивает приложение из трея,
+    //  * а второй пункт меню завершает приложение
+    //  * */
+    // connect(viewWindow, SIGNAL(triggered()), this, SLOT(show()));
+    // connect(quitAction, SIGNAL(triggered()), this, SLOT(close()));
+
+    // menu->addAction(viewWindow);
+    // menu->addAction(quitAction);
+
+    // /* Устанавливаем контекстное меню на иконку
+    //  * и показываем иконку приложения в трее
+    //  * */
+    // trayIcon->setContextMenu(menu);
+    // trayIcon->show();
+
+    // /* Также подключаем сигнал нажатия на иконку к обработчику
+    //  * данного нажатия
+    //  * */
+    // connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+    //         this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
     //контейнер с виджетами
     auto makePairWidget = [&](QTextEdit *te, QSpinBox *sb, const QString& name ){
@@ -154,6 +189,46 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+// /* Метод, который обрабатывает событие закрытия окна приложения
+//  * */
+// void MainWindow::closeEvent(QCloseEvent *event)
+// {
+//     /* Если окно видимо и чекбокс отмечен, то завершение приложения
+//      * игнорируется, а окно просто скрывается, что сопровождается
+//      * соответствующим всплывающим сообщением
+//      */
+//     if(this->isVisible()){
+//         event->ignore();
+//         this->hide();
+//         QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information);
+
+//         trayIcon->showMessage("Tray Program",
+//                               ("Приложение свернуто в трей. Для того чтобы, "
+//                                 "развернуть окно приложения, щелкните по иконке приложения в трее"),
+//                               icon,
+//                               2000);
+// }
+// }
+
+// /* Метод, который обрабатывает нажатие на иконку приложения в трее
+//  * */
+// void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
+// {
+//     switch (reason){
+//     case QSystemTrayIcon::Trigger:
+//         /* Событие игнорируется в том случае, если чекбокс не отмечен
+//          * */
+//             if(!this->isVisible()){
+//                 this->show();
+//             } else {
+//                 this->hide();
+//         }
+//         break;
+//     default:
+//         break;
+//     }
+// }
 
 void MainWindow::startTimer()
 {

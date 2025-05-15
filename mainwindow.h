@@ -2,6 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QCloseEvent>
+#include <QProcess>
+#include <QSystemTrayIcon>
+#include <QStyle>
+#include <QAction>
 #include <QString>
 #include <QTimer>
 #include <QTime>
@@ -30,6 +35,13 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+protected:
+    // void closeEvent(QCloseEvent *event);
+
+private slots:
+    // void iconActivated(QSystemTrayIcon::ActivationReason reason);
+
+
 signals:
     void breakTime(int breakMin);
 
@@ -46,6 +58,7 @@ signals:
 
 private:
     Ui::MainWindow *ui;
+    QSystemTrayIcon *trayIcon;
     breakWindows *breaktime;
     QTimer *timerDown;
     QTime time_updown;

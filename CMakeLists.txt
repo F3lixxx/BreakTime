@@ -68,6 +68,26 @@ install(TARGETS Breaktime
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
+
+install(FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/qss/breaktime.png
+    DESTINATION share/applications
+)
+
+# Настройки CPack для DEB-пакета
+set(CPACK_GENERATOR "DEB")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "yenox <f3lixxx@yandex.ru>")
+set(CPACK_PACKAGE_NAME "breaktime")
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+set(CPACK_PACKAGE_DESCRIPTION "A simple break reminder application")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Timer for work breaks")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt${QT_VERSION_MAJOR}widgets${QT_VERSION_MAJOR}, libc6 (>= 2.31)")
+set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
+# set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://example.com/breaktime")
+set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/debian/postinst")
+
+include(CPack)
+
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(Breaktime)
 endif()
