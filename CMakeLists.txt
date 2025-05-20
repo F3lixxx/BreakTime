@@ -1,10 +1,13 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(Breaktime VERSION 0.1 LANGUAGES CXX)
+project(Breaktime VERSION 0.2 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
+
+set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/icon.rc")
+
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -26,6 +29,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         declensionSpinBox.h
         breakwindows.h breakwindows.cpp breakwindows.ui
         style.qrc
+        ${app_icon_resource_windows}
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Breaktime APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -70,7 +74,7 @@ install(TARGETS Breaktime
 
 
 install(FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/qss/breaktime.png
+    # ${CMAKE_CURRENT_SOURCE_DIR}/qss/BreakTime.ico
     DESTINATION share/applications
 )
 
@@ -83,7 +87,6 @@ set(CPACK_PACKAGE_DESCRIPTION "A simple break reminder application")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Timer for work breaks")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt${QT_VERSION_MAJOR}widgets${QT_VERSION_MAJOR}, libc6 (>= 2.31)")
 set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
-# set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://example.com/breaktime")
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/debian/postinst")
 
 include(CPack)

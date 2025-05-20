@@ -27,15 +27,15 @@ breakWindows::~breakWindows()
 void breakWindows::timeforBreak(int time)
 {
     QFont sizeFont = lb_timeDown->font();
-    // this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
     this->showFullScreen();     // Полноэкранный режим
     this->show();
-    // this->raise();
-    // this->activateWindow();
-    // this->grabKeyboard();
-    // this->setCursor(Qt::BlankCursor);
-    // setFocusPolicy(Qt::NoFocus);
-    // setFocus();
+    this->raise();
+    this->activateWindow();
+    this->grabKeyboard();
+    this->setCursor(Qt::BlankCursor);
+    setFocusPolicy(Qt::NoFocus);
+    setFocus();
 
     qDebug() << "здесь по факту долджно открыться окно на " << time << " минут";
     break_updown = QTime(0, time, 0);

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QStatusBar>
 #include <QCloseEvent>
 #include <QProcess>
 #include <QSystemTrayIcon>
@@ -36,29 +37,35 @@ public:
     ~MainWindow();
 
 protected:
-    // void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent * event) override;
 
 private slots:
-    // void iconActivated(QSystemTrayIcon::ActivationReason reason);
+    void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
+    void setTrayIconActions();
+    void showTrayIcon();
 
 
 signals:
     void breakTime(int breakMin);
 
-    private slots:
+private slots:
     void startTimer();
 
     void on_pb_start_stop_clicked();
+
+    void on_pb_reset_clicked();
 
     void breaktimefunc();
 
     void stopSignal(bool timeStop);
 
-//     void on_pb_reset_clicked();
-
 private:
     Ui::MainWindow *ui;
+    QMenu *trayIconMenu;
+    QAction *restoreAction;
+    QAction *quitAction;
     QSystemTrayIcon *trayIcon;
+    QStatusBar *statusBar;
     breakWindows *breaktime;
     QTimer *timerDown;
     QTime time_updown;
@@ -72,6 +79,7 @@ private:
     QPushButton *pb_reset;
     QLabel *lb_planner;
     QLabel *lb_time;
+    QLabel *lb_msgStatusBar;
     QWidget *central_widget;
     QWidget *styleForTeSb;
     QWidget *styleForBtns;

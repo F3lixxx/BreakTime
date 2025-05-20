@@ -8,12 +8,16 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     this->setWindowTitle("Break Time");
+    this -> setTrayIconActions();
+    this -> showTrayIcon();
     min = 0;
     breakMins = 0;
     countTime = 0;
+    statusBar = new QStatusBar(this);
     timerDown = new QTimer(this);
     lb_planner = new QLabel(this);
     lb_time = new QLabel(this);
+    lb_msgStatusBar = new QLabel(this);
     te_repeats = new QTextEdit(this);
     sb_repeats = new declensionSpinBox(this);
     te_work_time = new QTextEdit(this);
@@ -26,46 +30,13 @@ MainWindow::MainWindow(QWidget *parent)
     lo_widgetsBorder = new QVBoxLayout();
     lo_buttons_h = new QHBoxLayout(); //Четвёртый горизонтальный layout (кнопки)
 
-    // /* Работа с иконкой трея, устанавливаем иконку из набора системных иконок,
-    //  * а также задаем всплывающую подсказку
-    //  * */
-    // trayIcon = new QSystemTrayIcon(this);
-    // trayIcon->setIcon(this->style()->standardIcon(QStyle::SP_ComputerIcon));
-    // trayIcon->setToolTip("Tray Program" "\n"
-    //                      "Работа со сворачиванием программы трей");
-    // /* После чего создаем контекстное меню из двух пунктов*/
-    // QMenu * menu = new QMenu(this);
-    // QAction * viewWindow = new QAction(("Развернуть программу"), this);
-    // QAction * quitAction = new QAction(("Выход"), this);
-
-    // /* подключаем сигналы нажатий на пункты меню к соответсвующим слотам.
-    //  * Первый пункт меню разворачивает приложение из трея,
-    //  * а второй пункт меню завершает приложение
-    //  * */
-    // connect(viewWindow, SIGNAL(triggered()), this, SLOT(show()));
-    // connect(quitAction, SIGNAL(triggered()), this, SLOT(close()));
-
-    // menu->addAction(viewWindow);
-    // menu->addAction(quitAction);
-
-    // /* Устанавливаем контекстное меню на иконку
-    //  * и показываем иконку приложения в трее
-    //  * */
-    // trayIcon->setContextMenu(menu);
-    // trayIcon->show();
-
-    // /* Также подключаем сигнал нажатия на иконку к обработчику
-    //  * данного нажатия
-    //  * */
-    // connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
-    //         this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
-
     //контейнер с виджетами
     auto makePairWidget = [&](QTextEdit *te, QSpinBox *sb, const QString& name ){
         QWidget *pairWidget = new QWidget(this);
         pairWidget->setObjectName(name);
         QHBoxLayout *pairLayout = new QHBoxLayout();
         pairLayout->addWidget(te);
+        te->setFixedSize(400, 40);
         pairLayout->addWidget(sb);
         pairWidget->setLayout(pairLayout);
         return pairWidget;
@@ -78,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
     pb_reset->setObjectName("pb_reset");
     lb_planner->setObjectName("lb_planner");
     lb_time->setObjectName("lb_time");
+    lb_msgStatusBar->setObjectName("lb_msgStatusBar");
     te_repeats->setObjectName("te_repeats");
     sb_repeats->setObjectName("sb_repeats");
     te_work_time->setObjectName("te_work_time");
@@ -97,11 +69,15 @@ MainWindow::MainWindow(QWidget *parent)
     lo_widgetsBorder->addWidget(workTimePair);
     lo_widgetsBorder->addWidget(breakTimePair);
     lo_widgetsBorder->addWidget(lb_time);
+
     //добавление кнопок
     lo_buttons_h->addWidget(pb_start_stop);
     lo_buttons_h->addWidget(pb_reset);
     lo_widgetsBorder->addLayout(lo_buttons_h);
 
+    //добавление статусбара и настройка
+    statusBar->addWidget(lb_msgStatusBar);
+    //конец
     central_widget->setLayout(lo_widgetsBorder); // засетование к основному виджету
     setCentralWidget(central_widget);
     //Конец добавления виджетов
@@ -150,7 +126,7 @@ MainWindow::MainWindow(QWidget *parent)
     breakTimePair->setMaximumHeight(70);
     te_break_time->setReadOnly(true);
     te_break_time->setFontPointSize(18);
-    te_break_time->setText("Время работы: ");
+    te_break_time->setText("Время перерыва: ");
     te_break_time->setAlignment(Qt::AlignCenter);
     te_break_time->setMinimumHeight(50);
     te_break_time->setMaximumHeight(50);
@@ -181,6 +157,7 @@ MainWindow::MainWindow(QWidget *parent)
     breaktime = new breakWindows;
     connect(timerDown, SIGNAL(timeout()), this, SLOT(startTimer()));
     connect(pb_start_stop, &QPushButton::clicked, this, &MainWindow::on_pb_start_stop_clicked);
+    connect(pb_reset, &QPushButton::clicked, this, &MainWindow::on_pb_reset_clicked);
     connect(this, &MainWindow::breakTime, breaktime, &breakWindows::timeforBreak);
     connect(breaktime, &breakWindows::timebreakstop, this, &MainWindow::stopSignal);
 }
@@ -190,45 +167,58 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-// /* Метод, который обрабатывает событие закрытия окна приложения
-//  * */
-// void MainWindow::closeEvent(QCloseEvent *event)
-// {
-//     /* Если окно видимо и чекбокс отмечен, то завершение приложения
-//      * игнорируется, а окно просто скрывается, что сопровождается
-//      * соответствующим всплывающим сообщением
-//      */
-//     if(this->isVisible()){
-//         event->ignore();
-//         this->hide();
-//         QSystemTrayIcon::MessageIcon icon = QSystemTrayIcon::MessageIcon(QSystemTrayIcon::Information);
+void MainWindow::closeEvent(QCloseEvent * event)
+{
+    if(trayIcon->isVisible()){
+        event->ignore();
+        this->hide();
+    }
+}
 
-//         trayIcon->showMessage("Tray Program",
-//                               ("Приложение свернуто в трей. Для того чтобы, "
-//                                 "развернуть окно приложения, щелкните по иконке приложения в трее"),
-//                               icon,
-//                               2000);
-// }
-// }
+void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+    switch (reason)
+    {
+    case QSystemTrayIcon::Trigger:
+    case QSystemTrayIcon::DoubleClick:
+        this->show();
+        break;
+    default:
+        break;
+    }
+}
 
-// /* Метод, который обрабатывает нажатие на иконку приложения в трее
-//  * */
-// void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason)
-// {
-//     switch (reason){
-//     case QSystemTrayIcon::Trigger:
-//         /* Событие игнорируется в том случае, если чекбокс не отмечен
-//          * */
-//             if(!this->isVisible()){
-//                 this->show();
-//             } else {
-//                 this->hide();
-//         }
-//         break;
-//     default:
-//         break;
-//     }
-// }
+void MainWindow::setTrayIconActions()
+{
+    // Setting actions...
+    restoreAction = new QAction("Восстановить", this);
+    quitAction = new QAction("Выход", this);
+
+    // Connecting actions to slots...
+    connect (restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
+    connect (quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+
+    // Setting system tray's icon menu...
+    trayIconMenu = new QMenu(this);
+    trayIconMenu -> addAction (restoreAction);
+    trayIconMenu -> addAction (quitAction);
+}
+
+void MainWindow::showTrayIcon()
+{
+    // Создаём экземпляр класса и задаём его свойства
+    trayIcon = new QSystemTrayIcon(this);
+    QIcon trayImg(":/styles/qss/BreakTime.ico");
+    trayIcon->setToolTip("Break Time" "\n" "Работа для настройки расписания" "\n");
+    trayIcon->setIcon(trayImg);
+    trayIcon->setContextMenu(trayIconMenu);
+
+    // Подключаем обработчик клика по иконке
+    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
+
+    // Выводим значок...
+    trayIcon->show();
+}
 
 void MainWindow::startTimer()
 {
@@ -259,23 +249,21 @@ void MainWindow::startTimer()
 void MainWindow::on_pb_start_stop_clicked()
 {
     min = sb_work_time->value();
-    qDebug() << "minutes: " << min;
-
     breakMins = sb_break_time->value();
-
     countTime = sb_repeats->value();
-    qDebug() << "time break: " << countTime;
 
     if(running){
-        pb_start_stop->setText("Старт");
         timerDown->stop();
+        pb_start_stop->setText("Продолжить");
         running = false;
-    }else if(!running){
-        // Инициализация времени и запуск таймера
-        time_updown = QTime(0, min, 0);
+    } else {
+        // Если таймер еще не был запущен — инициализируем
+        if (time_updown == QTime(0, 0, 0)) {
+            ui->statusBar->showMessage("Редактирование отключено! нажмите 'Сброс' что бы настроить заново таймер", 5000);
+            time_updown = QTime(0, min, 0);
+        }
         timerDown->start(1000);
-    }else{
-        timerDown->stop();
+        running = true;
     }
 }
 
@@ -306,5 +294,15 @@ void MainWindow::stopSignal(bool timeStop)
     }
 }
 
-
-
+void MainWindow::on_pb_reset_clicked()
+{
+    time_updown = QTime(0, 0, 0);
+    timerDown->stop();
+    lb_time->setText("00:00");
+    sb_repeats->setEnabled(true);
+    sb_work_time->setEnabled(true);
+    sb_break_time->setEnabled(true);
+    pb_start_stop->setEnabled(true);
+    running = false;
+    ui->statusBar->showMessage("Таймер сброшен! Настройте его сначала!", 3000);
+}

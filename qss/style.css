@@ -62,6 +62,23 @@ QPushButton#pb_start_stop:pressed{
     background-color: #00CF00;
 }
 
+/* Кнопка паузы */
+QPushButton#pb_pause {
+    border: 1px solid #4A4A4A;
+    border-radius: 12px;
+    background-color: #806726;
+    padding: 12px;
+    max-width:126px;
+}
+
+QPushButton#pb_pause:hover {
+    background-color: #997B2E;
+}
+
+QPushButton#pb_pause:pressed{
+    background-color: #BD9739;
+}
+
 /* Кнопка Сброс */
 QPushButton#pb_reset{
     border: 1px solid #4A4A4A;
