@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 #include <QStatusBar>
+#include <QtMultimedia/QSoundEffect>
+#include <QMessageBox>
+#include <QShortcut>
 #include <QCloseEvent>
 #include <QProcess>
 #include <QSystemTrayIcon>
@@ -44,7 +47,6 @@ private slots:
     void setTrayIconActions();
     void showTrayIcon();
 
-
 signals:
     void breakTime(int breakMin);
 
@@ -61,6 +63,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QSoundEffect *notification;
     QMenu *trayIconMenu;
     QAction *restoreAction;
     QAction *quitAction;

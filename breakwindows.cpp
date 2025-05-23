@@ -8,15 +8,25 @@ breakWindows::breakWindows(QWidget *parent)
     ui->setupUi(this);
     min = 0;
     timerDown = new QTimer(this);
+    notificationWork = new QSoundEffect(this);
     lb_timeDown = new QLabel(this);
     lo_widgets = new QVBoxLayout();
 
+    //Настройка Оповещения
+    notificationWork->setSource(QUrl("qrc:/qss/notification.wav"));
+    //конец настройки
+
+    //Настройка добавления виджетов
     lo_widgets->addWidget(lb_timeDown);
     setLayout(lo_widgets);
+    //конец настройки
 
-    lb_timeDown->setAlignment(Qt::AlignCenter);
-
-    connect(timerDown, SIGNAL(timeout()), this, SLOT(timeDown()));
+    lb_timeDown->setAlignment(Qt::AlignCenter); // лэйбл с таймером по центру
+    //Настройка аварийного выхода из программы
+    ctrlShiftE = new QShortcut(QKeySequence("CTRL+SHIFT+E"), this);
+    connect(ctrlShiftE, SIGNAL(activated()), this, SLOT(emergencyExit()));
+    //конец настройки
+    connect(timerDown, SIGNAL(timeout()), this, SLOT(timeDown())); // запуск времени
 }
 
 breakWindows::~breakWindows()
@@ -37,7 +47,6 @@ void breakWindows::timeforBreak(int time)
     setFocusPolicy(Qt::NoFocus);
     setFocus();
 
-    qDebug() << "здесь по факту долджно открыться окно на " << time << " минут";
     break_updown = QTime(0, time, 0);
     sizeFont.setPixelSize(70);
     lb_timeDown->setFont(sizeFont);
@@ -47,6 +56,7 @@ void breakWindows::timeforBreak(int time)
 
 void breakWindows::timeDown()
 {
+    bool isSoundPlay = false;
     if (break_updown == QTime(0, 0, 0)) {
         timerDown->stop();
         this->close();
@@ -54,6 +64,12 @@ void breakWindows::timeDown()
         this->unsetCursor();
         emit timebreakstop(true);
         return;
+    }
+
+    if (break_updown == QTime(0,0,5) && !isSoundPlay){
+        notificationWork->play();
+        notificationWork->setVolume(0.5);
+        isSoundPlay = true;
     }
 
     break_updown = break_updown.addSecs(-1);
@@ -69,3 +85,13 @@ void breakWindows::closeEvent(QCloseEvent *event){
         event->ignore();
     }
 }
+
+void breakWindows::emergencyExit() // Экстренный выход из программы  надо ли оно, пока что под вопросом
+{
+    QMessageBox::StandardButton emergencyEx;
+    emergencyEx = QMessageBox::warning(this,"Экстренный Выход", "Приложение полностью закроется и вам придется настраивать все заново, Вы уверены что хотите выйти?", QMessageBox::Yes | QMessageBox::No);
+    if(emergencyEx == QMessageBox::Yes){
+        qApp->exit();
+    }
+}
+

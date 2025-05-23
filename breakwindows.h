@@ -2,6 +2,8 @@
 #define BREAKWINDOWS_H
 
 #include <QDialog>
+#include <QtMultimedia/QSoundEffect>
+#include <QShortcut>
 #include <QTimer>
 #include <QTime>
 #include <QFile>
@@ -31,13 +33,16 @@ signals:
 
 public slots:
     void timeforBreak(int time);
-
     void timeDown();
-
     void closeEvent(QCloseEvent *event) override;
+
+private slots:
+    void emergencyExit();
 
 private:
     Ui::breakWindows *ui;
+    QSoundEffect *notificationWork;
+    QShortcut *ctrlShiftE;
     QTimer *timerDown;
     QTime break_updown;
     QString currentDoing;

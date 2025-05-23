@@ -5,4 +5,7 @@
         <file>qss/right_arrow.png</file>
         <file>qss/BreakTime.ico</file>
     </qresource>
+    <qresource prefix="/">
+        <file>qss/notification.wav</file>
+    </qresource>
 </RCC>

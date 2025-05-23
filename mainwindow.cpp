@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     min = 0;
     breakMins = 0;
     countTime = 0;
+    notification = new QSoundEffect(this);
     statusBar = new QStatusBar(this);
     timerDown = new QTimer(this);
     lb_planner = new QLabel(this);
@@ -42,6 +43,10 @@ MainWindow::MainWindow(QWidget *parent)
         return pairWidget;
     };
     //конец
+
+    //Настройка Оповещения
+    notification->setSource(QUrl("qrc:/qss/notification.wav"));
+    //Конец настройки
 
     //Сеты имени для виджетов
     central_widget->setObjectName("central_widget");
@@ -209,7 +214,6 @@ void MainWindow::showTrayIcon()
     // Создаём экземпляр класса и задаём его свойства
     trayIcon = new QSystemTrayIcon(this);
     QIcon trayImg(":/styles/qss/BreakTime.ico");
-    trayIcon->setToolTip("Break Time" "\n" "Работа для настройки расписания" "\n");
     trayIcon->setIcon(trayImg);
     trayIcon->setContextMenu(trayIconMenu);
 
@@ -222,6 +226,8 @@ void MainWindow::showTrayIcon()
 
 void MainWindow::startTimer()
 {
+    QString toolTipText = QString("Break Time\nОсталось времени до перерыва: %1").arg(time_updown.toString("mm:ss"));
+    bool soundPlayed = false;
     if (time_updown == QTime(0, 0, 0)) {
         timerDown->stop();
         breaktimefunc();
@@ -233,6 +239,11 @@ void MainWindow::startTimer()
         pb_start_stop->setEnabled(true);
         return;
     }
+    if(time_updown == QTime(0,0,5) && !soundPlayed){
+        notification->play();
+        notification->setVolume(0.5);
+        soundPlayed = true;
+    }
 
     pb_start_stop->setText("Пауза");
     // Уменьшаем время на одну секунду
@@ -240,7 +251,8 @@ void MainWindow::startTimer()
     lb_time->setText(time_updown.toString("mm:ss"));
     running = true;
 
-    //блок кнопок и лэйблов для редавктирования
+    trayIcon->setToolTip(toolTipText);
+    //блок кнопок и лэйблов для редактирования
     sb_repeats->setEnabled(false);
     sb_work_time->setEnabled(false);
     sb_break_time->setEnabled(false);
@@ -269,16 +281,13 @@ void MainWindow::on_pb_start_stop_clicked()
 
 void MainWindow::breaktimefunc()
 {
-    emit breakTime(breakMins);
-    qDebug() << "должно открыться окно";
+    emit breakTime(breakMins); //Открытие окна с перерывом
 }
 
-void MainWindow::stopSignal(bool timeStop)
+void MainWindow::stopSignal(bool timeStop) // Настройка циклов перерыва
 {
     static int currentCycle = 0;
     currentCycle++;
-
-    qDebug() << "Цикл завершён, текущий: " << currentCycle << " из " << countTime;
 
     if (currentCycle < countTime) {
         // запускаем следующий рабочий сеанс
@@ -286,7 +295,8 @@ void MainWindow::stopSignal(bool timeStop)
         lb_time->setText(time_updown.toString("mm:ss"));
         timerDown->start(1000);
     } else {
-        qDebug() << "Все циклы завершены!";
+        qDebug() << "Все циклы завершены!"; //нужно будет добавить
+        QMessageBox::information(this, "Информация", "Все циклы завершены, при необходимости настройте программу заново!", QMessageBox::Ok);
         currentCycle = 0;  // сбрасываем на будущее
         sb_repeats->setEnabled(true);
         sb_work_time->setEnabled(true);
