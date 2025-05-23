@@ -212,10 +212,12 @@ void MainWindow::setTrayIconActions()
 void MainWindow::showTrayIcon()
 {
     // Создаём экземпляр класса и задаём его свойства
+    QString toolTipText = QString("Break Time\nНастройте таймер!");
     trayIcon = new QSystemTrayIcon(this);
     QIcon trayImg(":/styles/qss/BreakTime.ico");
     trayIcon->setIcon(trayImg);
     trayIcon->setContextMenu(trayIconMenu);
+    trayIcon->setToolTip(toolTipText);
 
     // Подключаем обработчик клика по иконке
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
@@ -267,6 +269,8 @@ void MainWindow::on_pb_start_stop_clicked()
     if(running){
         timerDown->stop();
         pb_start_stop->setText("Продолжить");
+        QString toolTipText = QString("Break Time\nТаймер на паузе");
+        trayIcon->setToolTip(toolTipText);
         running = false;
     } else {
         // Если таймер еще не был запущен — инициализируем
@@ -313,6 +317,9 @@ void MainWindow::on_pb_reset_clicked()
     sb_work_time->setEnabled(true);
     sb_break_time->setEnabled(true);
     pb_start_stop->setEnabled(true);
+    pb_start_stop->setText("Старт");
+    QString toolTipTextInReset = QString("Break Time\nТаймер сброшен, настройте и запустите таймер!");
+    trayIcon->setToolTip(toolTipTextInReset);
     running = false;
     ui->statusBar->showMessage("Таймер сброшен! Настройте его сначала!", 3000);
 }
