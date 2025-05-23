@@ -299,7 +299,7 @@ void MainWindow::stopSignal(bool timeStop) // Настройка циклов п
         lb_time->setText(time_updown.toString("mm:ss"));
         timerDown->start(1000);
     } else {
-        qDebug() << "Все циклы завершены!"; //нужно будет добавить
+        this->show();
         QMessageBox::information(this, "Информация", "Все циклы завершены, при необходимости настройте программу заново!", QMessageBox::Ok);
         currentCycle = 0;  // сбрасываем на будущее
         sb_repeats->setEnabled(true);
