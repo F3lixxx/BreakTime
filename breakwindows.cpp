@@ -86,11 +86,12 @@ void breakWindows::closeEvent(QCloseEvent *event){
     }
 }
 
-void breakWindows::KeyPessEvent(QKeyEvent *e)
+void breakWindows::keyPressEvent(QKeyEvent *event)
 {
-    if(e->key() == Qt::Key_Escape){
-        e->ignore();
+    if(event->key() == Qt::Key_Escape){
+        return;
     }
+    QDialog::keyPressEvent(event);
 }
 
 void breakWindows::emergencyExit() // Экстренный выход из программы  надо ли оно, пока что под вопросом
