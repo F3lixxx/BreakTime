@@ -86,6 +86,13 @@ void breakWindows::closeEvent(QCloseEvent *event){
     }
 }
 
+void breakWindows::KeyPessEvent(QKeyEvent *e)
+{
+    if(e->key() == Qt::Key_Escape){
+        e->ignore();
+    }
+}
+
 void breakWindows::emergencyExit() // Экстренный выход из программы  надо ли оно, пока что под вопросом
 {
     QMessageBox::StandardButton emergencyEx;

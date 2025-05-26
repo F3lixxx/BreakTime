@@ -35,6 +35,7 @@ public slots:
     void timeforBreak(int time);
     void timeDown();
     void closeEvent(QCloseEvent *event) override;
+    void KeyPessEvent(QKeyEvent *e);
 
 private slots:
     void emergencyExit();

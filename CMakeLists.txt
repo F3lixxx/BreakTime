@@ -22,6 +22,7 @@ set(PROJECT_SOURCES
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+  if(WIN32)
     qt_add_executable(BreakTime
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
@@ -30,6 +31,15 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         style.qrc
         ${app_icon_resource_windows}
     )
+else()
+  qt_add_executable(BreakTime
+      MANUAL_FINALIZATION
+      ${PROJECT_SOURCES}
+      declensionSpinBox.h
+      breakwindows.h breakwindows.cpp breakwindows.ui
+      style.qrc
+    )
+  endif()
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Breaktime APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
