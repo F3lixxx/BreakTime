@@ -26,6 +26,7 @@ breakWindows::breakWindows(QWidget *parent)
     ctrlShiftE = new QShortcut(QKeySequence("CTRL+SHIFT+E"), this);
     connect(ctrlShiftE, SIGNAL(activated()), this, SLOT(emergencyExit()));
     //конец настройки
+
     connect(timerDown, SIGNAL(timeout()), this, SLOT(timeDown())); // запуск времени
 }
 
@@ -91,6 +92,7 @@ void breakWindows::keyPressEvent(QKeyEvent *event)
     if(event->key() == Qt::Key_Escape){
         return;
     }
+
     QDialog::keyPressEvent(event);
 }
 
