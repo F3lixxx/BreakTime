@@ -7,10 +7,10 @@
 #include <QObject>
 #include <QDebug>
 
-QString logFile = "log.ini";
 QDateTime startDateTime;
 
 void logwrite(const QString &message){
+    QString logFile = QCoreApplication::applicationDirPath() + "/log.ini";
     QFile file(logFile);
     if(file.open(QIODevice::Append | QIODevice::Text)){
         QTextStream out(&file);
