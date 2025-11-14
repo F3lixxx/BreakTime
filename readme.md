@@ -60,12 +60,33 @@
 - Email: **y3nohx@gmail.com**
 - Telegram: **https://t.me/BreakTime_y3n** все новости и обновления будут дублироваться в эту группу! 
 ---
-P.S.
-Сейчас я в поиске работы или стажировки на позицию начинающего C++ / Qt разработчика.
-Если вам интересен мой опыт или проект — буду рад пообщаться!
-
----
 
 ## Лицензия
 
-MIT License
+BreakTime Non-Commercial Attribution License (BNAL)
+
+Copyright (c) 2025 @y3nox
+
+Permission is hereby granted to any person to use, copy, study, and modify this software for non-commercial purposes only, under the following conditions:
+
+Attribution
+All copies, modifications, and derivative works must clearly and visibly credit the original author:
+@y3nox
+
+Non-Commercial Use Only
+Commercial use of this software is strictly prohibited.
+“Commercial use” includes, but is not limited to:
+
+selling the software or distributing it for a fee,
+
+including it in paid products or subscription-based services,
+
+using it within a company or organization to generate profit,
+
+bundling it with any product that requires payment.
+
+No Resale
+You may not sell, sublicense, or otherwise commercially distribute this software or any derivative works.
+
+No Warranty
+This software is provided “as is”, without any warranties of any kind, express or implied.
