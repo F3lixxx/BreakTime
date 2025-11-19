@@ -68,7 +68,7 @@ private:
     QAction *restoreAction;
     QAction *quitAction;
     QSystemTrayIcon *trayIcon;
-    QStatusBar *statusBar;
+    // QStatusBar *statusBar;
     breakWindows *breaktime;
     QTimer *timerDown;
     QTime time_updown;
@@ -90,8 +90,12 @@ private:
     QVBoxLayout* lo_widgetsBorder;
     QFont sizeText;
     QString todo;
-    bool running = false;
+    QString toolTipText;
+    QString toolTipTextInReset;
+    bool running;
+    bool soundPlayed;
     int min;
+    int currentCycle = 0;
     int breakMins;
     int countTime;
 };

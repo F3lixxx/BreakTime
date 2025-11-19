@@ -50,7 +50,9 @@ int main(int argc, char *argv[])
     });
 
     QFile stylesheet_file (":/styles/qss/style.css");
-    stylesheet_file.open( QFile :: ReadOnly);
+    if(!stylesheet_file.open( QFile :: ReadOnly)){
+        qWarning() << "Failed to open stylesheet file:" << stylesheet_file.errorString();
+    }
     QString stylesheet = QLatin1String (stylesheet_file.readAll());
     qApp-> setStyleSheet (stylesheet);
     MainWindow w;

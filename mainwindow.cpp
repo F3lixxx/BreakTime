@@ -13,8 +13,10 @@ MainWindow::MainWindow(QWidget *parent)
     min = 0;
     breakMins = 0;
     countTime = 0;
+    soundPlayed = false;
+    running = false;
     notification = new QSoundEffect(this);
-    statusBar = new QStatusBar(this);
+    // statusBar = new QStatusBar(this);
     timerDown = new QTimer(this);
     lb_planner = new QLabel(this);
     lb_time = new QLabel(this);
@@ -81,7 +83,8 @@ MainWindow::MainWindow(QWidget *parent)
     lo_widgetsBorder->addLayout(lo_buttons_h);
 
     //добавление статусбара и настройка
-    statusBar->addWidget(lb_msgStatusBar);
+    // statusBar->addWidget(lb_msgStatusBar);
+    ui->statusBar->addWidget(lb_msgStatusBar);
     //конец
     central_widget->setLayout(lo_widgetsBorder); // засетование к основному виджету
     setCentralWidget(central_widget);
@@ -212,7 +215,7 @@ void MainWindow::setTrayIconActions()
 void MainWindow::showTrayIcon()
 {
     // Создаём экземпляр класса и задаём его свойства
-    QString toolTipText = QString("Break Time\nНастройте таймер!");
+    toolTipText = QString("Break Time\nНастройте таймер!");
     trayIcon = new QSystemTrayIcon(this);
     QIcon trayImg(":/styles/qss/BreakTime.ico");
     trayIcon->setIcon(trayImg);
@@ -228,8 +231,8 @@ void MainWindow::showTrayIcon()
 
 void MainWindow::startTimer()
 {
-    QString toolTipText = QString("Break Time\nОсталось времени до перерыва: %1").arg(time_updown.toString("mm:ss"));
-    bool soundPlayed = false;
+    toolTipText = QString("Break Time\nОсталось времени до перерыва: %1").arg(time_updown.toString("mm:ss"));
+
     if (time_updown == QTime(0, 0, 0)) {
         timerDown->stop();
         breaktimefunc();
@@ -242,8 +245,8 @@ void MainWindow::startTimer()
         return;
     }
     if(time_updown == QTime(0,0,5) && !soundPlayed){
-        notification->play();
         notification->setVolume(0.5);
+        notification->play();
         soundPlayed = true;
     }
 
@@ -290,7 +293,6 @@ void MainWindow::breaktimefunc()
 
 void MainWindow::stopSignal(bool timeStop) // Настройка циклов перерыва
 {
-    static int currentCycle = 0;
     currentCycle++;
 
     if (currentCycle < countTime) {
@@ -318,7 +320,7 @@ void MainWindow::on_pb_reset_clicked()
     sb_break_time->setEnabled(true);
     pb_start_stop->setEnabled(true);
     pb_start_stop->setText("Старт");
-    QString toolTipTextInReset = QString("Break Time\nТаймер сброшен, настройте и запустите таймер!");
+    toolTipTextInReset = QString("Break Time\nТаймер сброшен, настройте и запустите таймер!");
     trayIcon->setToolTip(toolTipTextInReset);
     running = false;
     ui->statusBar->showMessage("Таймер сброшен! Настройте его сначала!", 3000);
