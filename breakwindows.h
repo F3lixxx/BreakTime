@@ -52,6 +52,7 @@ private:
     QLabel *lb_todo;
     bool ok;
     int min;
+    bool isSoundPlay = false;
 };
 
 #endif // BREAKWINDOWS_H

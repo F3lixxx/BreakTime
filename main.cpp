@@ -24,6 +24,7 @@ void logwrite(const QString &message){
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    QApplication::setQuitOnLastWindowClosed(false);
 
     QString startTime = QDateTime::currentDateTime().toString("hh:mm:ss dd-MM-yyyy");
 

@@ -57,12 +57,13 @@ void breakWindows::timeforBreak(int time)
 
 void breakWindows::timeDown()
 {
-    bool isSoundPlay = false;
     if (break_updown == QTime(0, 0, 0)) {
         timerDown->stop();
-        this->close();
+
         this->releaseKeyboard();
         this->unsetCursor();
+        this->hide(); // тоже если что ннужно написать "this->close();" Вместо close() — просто прячем окно
+
         emit timebreakstop(true);
         return;
     }
@@ -72,6 +73,7 @@ void breakWindows::timeDown()
         notificationWork->setVolume(0.5);
         isSoundPlay = true;
     }
+    isSoundPlay = false;
 
     break_updown = break_updown.addSecs(-1);
     lb_timeDown->setText(break_updown.toString("Осталось времени на перерыв: mm:ss"));
@@ -80,7 +82,7 @@ void breakWindows::timeDown()
 void breakWindows::closeEvent(QCloseEvent *event){
     if(break_updown == QTime(0, 0, 0)){
         event->accept();
-        this->close();
+        // this->close(); ЕСЛИ НЕ СРАБОТАЕТ ТО ОТКОММЕНТИ ЭТУ СТРОКУ
     }
     else{
         event->ignore();

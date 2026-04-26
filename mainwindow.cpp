@@ -250,6 +250,8 @@ void MainWindow::startTimer()
         soundPlayed = true;
     }
 
+    soundPlayed = false;
+
     pb_start_stop->setText("Пауза");
     // Уменьшаем время на одну секунду
     time_updown = time_updown.addSecs(-1);
@@ -288,6 +290,12 @@ void MainWindow::on_pb_start_stop_clicked()
 
 void MainWindow::breaktimefunc()
 {
+    if (!breaktime) {
+        breaktime = new breakWindows(); // Создаем, если нет
+        // Переподключаем сигналы, если создали заново
+        connect(this, &MainWindow::breakTime, breaktime, &breakWindows::timeforBreak);
+        connect(breaktime, &breakWindows::timebreakstop, this, &MainWindow::stopSignal);
+    }
     emit breakTime(breakMins); //Открытие окна с перерывом
 }
 
