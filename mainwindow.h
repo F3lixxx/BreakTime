@@ -21,9 +21,11 @@
 #include <QTextEdit>
 #include <QHBoxLayout>
 #include <QPushButton>
+#include <QToolButton>
 #include <QLabel>
 #include "breakwindows.h"
 #include "declensionSpinBox.h"
+#include "screentimetracker.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -57,6 +59,10 @@ private slots:
 
     void on_pb_reset_clicked();
 
+    void on_pb_dataBase_clicked();
+
+    // void on_pb_stats_clicked();
+
     void breaktimefunc();
 
     void stopSignal(bool timeStop);
@@ -68,8 +74,9 @@ private:
     QAction *restoreAction;
     QAction *quitAction;
     QSystemTrayIcon *trayIcon;
-    // QStatusBar *statusBar;
     breakWindows *breaktime;
+    screentimetracker *timetracker;
+    screentimetracker *statsWindow = nullptr;
     QTimer *timerDown;
     QTime time_updown;
     QTextEdit *te_repeats;
@@ -80,6 +87,8 @@ private:
     QSpinBox *sb_break_time;
     QPushButton *pb_start_stop;
     QPushButton *pb_reset;
+    QToolButton *pb_dataBase;
+    QPushButton *pb_stats;
     QLabel *lb_planner;
     QLabel *lb_time;
     QLabel *lb_msgStatusBar;

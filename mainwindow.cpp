@@ -29,9 +29,11 @@ MainWindow::MainWindow(QWidget *parent)
     sb_break_time = new QSpinBox(this);
     pb_start_stop = new QPushButton(this);
     pb_reset = new QPushButton(this);
+    pb_dataBase = new QToolButton(this);
     central_widget = new QWidget(this); //центральный виджет
     lo_widgetsBorder = new QVBoxLayout();
     lo_buttons_h = new QHBoxLayout(); //Четвёртый горизонтальный layout (кнопки)
+    timetracker = new screentimetracker(this);
 
     //контейнер с виджетами
     auto makePairWidget = [&](QTextEdit *te, QSpinBox *sb, const QString& name ){
@@ -52,8 +54,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     //Сеты имени для виджетов
     central_widget->setObjectName("central_widget");
+
     pb_start_stop->setObjectName("pb_start_stop");
     pb_reset->setObjectName("pb_reset");
+    pb_dataBase->setObjectName("pb_database");
+    pb_dataBase->setIcon(QIcon(":/styles/qss/stats.png"));
+    pb_dataBase->setIconSize(QSize(30, 30));
+    pb_dataBase->setToolTip("Экранное время");
+    pb_dataBase->setAutoRaise(true); // убирает рамку кнопки, пока на неё не наведёшься — выглядит как иконка, а не кнопка
+    pb_dataBase->setCursor(Qt::PointingHandCursor);
+
     lb_planner->setObjectName("lb_planner");
     lb_time->setObjectName("lb_time");
     lb_msgStatusBar->setObjectName("lb_msgStatusBar");
@@ -80,6 +90,7 @@ MainWindow::MainWindow(QWidget *parent)
     //добавление кнопок
     lo_buttons_h->addWidget(pb_start_stop);
     lo_buttons_h->addWidget(pb_reset);
+    lo_buttons_h->addWidget(pb_dataBase);
     lo_widgetsBorder->addLayout(lo_buttons_h);
 
     //добавление статусбара и настройка
@@ -159,6 +170,7 @@ MainWindow::MainWindow(QWidget *parent)
     //Настройка виджетов кнопок
     pb_start_stop->setText("Старт");
     pb_reset->setText("Сброс");
+    // pb_dataBase->setText("Активность программ");
     //Конец настройки
 
     //настройка запуска времени и открытие нового окна
@@ -166,6 +178,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(timerDown, SIGNAL(timeout()), this, SLOT(startTimer()));
     connect(pb_start_stop, &QPushButton::clicked, this, &MainWindow::on_pb_start_stop_clicked);
     connect(pb_reset, &QPushButton::clicked, this, &MainWindow::on_pb_reset_clicked);
+    connect(pb_dataBase, &QPushButton::clicked, this, &MainWindow::on_pb_dataBase_clicked);
     connect(this, &MainWindow::breakTime, breaktime, &breakWindows::timeforBreak);
     connect(breaktime, &breakWindows::timebreakstop, this, &MainWindow::stopSignal);
 }
@@ -332,4 +345,9 @@ void MainWindow::on_pb_reset_clicked()
     trayIcon->setToolTip(toolTipTextInReset);
     running = false;
     ui->statusBar->showMessage("Таймер сброшен! Настройте его сначала!", 3000);
+}
+
+void MainWindow::on_pb_dataBase_clicked()
+{
+    timetracker->show();
 }

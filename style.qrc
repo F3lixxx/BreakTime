@@ -4,6 +4,7 @@
         <file>qss/left_arrow.png</file>
         <file>qss/right_arrow.png</file>
         <file>qss/BreakTime.ico</file>
+        <file>qss/stats.png</file>
     </qresource>
     <qresource prefix="/">
         <file>qss/notification.wav</file>

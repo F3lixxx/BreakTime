@@ -104,6 +104,44 @@ QPushButton#pb_reset:hover {
     subcontrol-position: center left;
     image: url(:/styles/qss/left_arrow.png);
 }
+/* Кнопка Базы Данных */
+QPushButton#pb_database{
+    border: 1px solid #4A4A4A;
+    border-radius: 12px;
+    background-color: #935654;
+    padding: 12px;
+    max-width:126px;
+    margin-left: 20px; /* для управление расположением */
+}
+
+QPushButton#pb_database:hover{
+    background-color: #ab5654;
+}
+
+QPushButton#pb_database:pressed{
+    background-color: #00CF00;
+}
+
+QPushButton#btn_refresh{
+    border: 1px solid #4A4A4A;
+    border-radius: 12px;
+    background-color: #935654;
+    padding: 12px;
+    max-width:126px;
+    margin-left: 160px; /* для управление расположением */
+}
+
+QPushButton#btn_refresh:hover{
+    background-color: #ab5654;
+}
+
+QPushButton#btn_refresh:pressed{
+    background-color: ##ab564b;
+}
+
+QPushButton#pb_reset:hover {
+    background-color: #ab5654;
+}
 
 /* Наведение */
  QSpinBox::up-button:hover,
