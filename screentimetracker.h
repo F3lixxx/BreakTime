@@ -72,6 +72,11 @@ private:
     //work with DataBase
     void updateDataBase(const QString &processName, const QString &displayName, qint64 deltaSec);
 
+    QString m_currentDate; // дата, для которой сейчас открыта БД (формат YYYY-MM-DD)
+
+    QString getDbPathForDate(const QString &date);
+    void checkDateChange();// проверяет, не наступил ли новый день, и переключает БД при необходимости
+
     //Get info from active Window/process
     QString getProcessName(HWND hwnd, QString &outFullPath);
     QString getActiveWindowTitle(HWND hwnd);

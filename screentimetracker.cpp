@@ -49,18 +49,39 @@ screentimetracker::screentimetracker(QWidget *parent)
     qDebug();
 }
 
+
+QString screentimetracker::formatDuration(qint64 totalSeconds) {
+    int hours = totalSeconds / 3600;
+    int minutes = (totalSeconds % 3600) / 60;
+    int seconds = totalSeconds % 60;
+
+    return QString("%1ч %2мин %3сек")
+        .arg(hours)
+        .arg(minutes, 2, 10, QChar('0'))
+        .arg(seconds, 2, 10, QChar('0'));
+}
+
+QString screentimetracker::getDbPathForDate(const QString &date) {
+    QString appDataDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir().mkpath(appDataDir);
+    return appDataDir + "/screentime_" + date + ".db";
+}
+
+
 screentimetracker::~screentimetracker()
 {
-    // if(m_db.isOpen())
-    // {
-    //     m_db.commit();
-    //     m_db.close();
-    // }
+    if(m_db.isOpen())
+    {
+        m_db.commit();
+        m_db.close();
+    }
     delete ui;
 }
 
 void screentimetracker::tick()
 {
+    checkDateChange();
+
     QDateTime now = QDateTime::currentDateTime();
     qint64 elapsedSec = m_lastTick.secsTo(now);
     m_lastTick = now;
@@ -73,7 +94,7 @@ void screentimetracker::tick()
         currentApp = "Sleep";
         currentProcess = "__system_idle__";
     }
-    else if(!isUserActive(60))
+    else if(!isUserActive(240))
     {
         currentApp = "Moved away";
         currentProcess = "__afk__";
@@ -83,8 +104,8 @@ void screentimetracker::tick()
         HWND hwnd = GetForegroundWindow();
         QString fullPath;
         currentProcess = getProcessName(hwnd, fullPath);
-        QString rawTitle = getActiveWindowTitle(hwnd);
-        currentApp = humanizeAppName(currentProcess, fullPath, rawTitle);
+        // QString rawTitle = getActiveWindowTitle(hwnd);
+        currentApp = humanizeAppName(currentProcess, fullPath, "");
     }
 
     if(elapsedSec <= 0)
@@ -99,19 +120,70 @@ void screentimetracker::tick()
     updateDataBase(currentProcess, currentApp, elapsedSec);
 }
 
+void screentimetracker::checkDateChange() {
+    QString todayStr = QDate::currentDate().toString("yyyy-MM-dd");
+    if (todayStr != m_currentDate) {
+        // Наступил новый день — коммитим и закрываем вчерашнюю БД, открываем сегодняшнюю
+        if (m_db.isOpen()) {
+            m_db.commit();
+            m_db.close();
+        }
+        initDataBase(); // откроет файл уже с новой датой
+        qDebug() << "Переключение на новый день:" << m_currentDate;
+    }
+}
+
 void screentimetracker::commitBatch()
 {
+    checkDateChange();
     m_db.commit();
     m_db.transaction();
 }
 
 void screentimetracker::initDataBase()
 {
+    // m_db = QSqlDatabase::addDatabase("QSQLITE");
+    // // m_db.setDatabaseName(QCoreApplication::applicationDirPath() + "/screentime.db");
+    // QString appDataDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    // QDir().mkpath(appDataDir); // создаёт папку, если её ещё нет
+    // m_db.setDatabaseName(appDataDir + "/screentime.db");
+
+    // if(!m_db.open())
+    // {
+    //     qDebug() << ("Data Base is not open!") << m_db.lastError().text();
+    // }
+
+    // QSqlQuery pragmaQuery(m_db);
+    // if (!pragmaQuery.exec("PRAGMA journal_mode=WAL;")) {
+    //     qDebug() << "Не удалось включить WAL:" << pragmaQuery.lastError().text();
+    // }
+
+    // QSqlQuery query;
+    // QString createTable = "CREATE TABLE IF NOT EXISTS screen_intervals ("
+    //                       "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+    //                       "process_name TEXT, "
+    //                       "app_name TEXT, "
+    //                       "start_time DATETIME, "
+    //                       "end_time DATETIME, "
+    //                       "duration_seconds INTEGER)";
+
+    // if(!query.exec(createTable))
+    // {
+    //     qDebug() << "Table is not create" << query.lastError().text();
+    // }
+    m_currentDate = QDate::currentDate().toString("yyyy-MM-dd");
+
+    if (m_db.isOpen()) {
+        m_db.commit();
+        m_db.close();
+    }
+    // Если соединение уже существует под именем по умолчанию — удаляем перед пересозданием
+    if (QSqlDatabase::contains(QSqlDatabase::defaultConnection)) {
+        QSqlDatabase::removeDatabase(QSqlDatabase::defaultConnection);
+    }
+
     m_db = QSqlDatabase::addDatabase("QSQLITE");
-    // m_db.setDatabaseName(QCoreApplication::applicationDirPath() + "/screentime.db");
-    QString appDataDir = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    QDir().mkpath(appDataDir); // создаёт папку, если её ещё нет
-    m_db.setDatabaseName(appDataDir + "/screentime.db");
+    m_db.setDatabaseName(getDbPathForDate(m_currentDate));
 
     if(!m_db.open())
     {
@@ -123,7 +195,7 @@ void screentimetracker::initDataBase()
         qDebug() << "Не удалось включить WAL:" << pragmaQuery.lastError().text();
     }
 
-    QSqlQuery query;
+    QSqlQuery query(m_db);
     QString createTable = "CREATE TABLE IF NOT EXISTS screen_intervals ("
                           "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                           "process_name TEXT, "
@@ -136,6 +208,12 @@ void screentimetracker::initDataBase()
     {
         qDebug() << "Table is not create" << query.lastError().text();
     }
+
+    // Сбрасываем состояние текущей сессии, раз файл БД сменился
+    m_lastProcess.clear();
+    m_lastIntervalId = -1;
+
+    m_db.transaction();
 }
 
 
@@ -290,15 +368,15 @@ QString screentimetracker::fallbackName(const QString &processName) {
 QString screentimetracker::humanizeAppName(const QString &processName, const QString &exeFullPath, const QString &title) {
     QString lowerTitle = title.toLower();
 
-    // YouTube определяем по заголовку отдельно, независимо от браузера
-    if (lowerTitle.contains("youtube")) {
-        QString cleanTitle = title;
-        cleanTitle.replace(" - YouTube - Google Chrome", "");
-        cleanTitle.replace(" — YouTube — Google Chrome", "");
-        cleanTitle.replace(" - YouTube", "");
-        cleanTitle.replace(" — YouTube", "");
-        return "YouTube: " + cleanTitle.trimmed();
-    }
+    // // YouTube определяем по заголовку отдельно, независимо от браузера
+    // if (lowerTitle.contains("youtube")) {
+    //     QString cleanTitle = title;
+    //     cleanTitle.replace(" - YouTube - Google Chrome", "");
+    //     cleanTitle.replace(" — YouTube — Google Chrome", "");
+    //     cleanTitle.replace(" - YouTube", "");
+    //     cleanTitle.replace(" — YouTube", "");
+    //     return "YouTube: " + cleanTitle.trimmed();
+    // }
 
     QString procLower = processName.toLower();
 
@@ -340,23 +418,13 @@ void screentimetracker::refreshData() {
 }
 
 void screentimetracker::loadDataFromDb() {
-    QString connectionName = "stats_connection";
-
-    QSqlDatabase db;
-    if (QSqlDatabase::contains(connectionName)) {
-        db = QSqlDatabase::database(connectionName);
-    } else {
-        db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
-        db.setDatabaseName(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/screentime.db");
-    }
-
-    if (!db.open()) {
-        qDebug() << "Не удалось открыть БД для статистики:" << db.lastError().text();
+    if (!m_db.isOpen()) {
+        qDebug() << "База данных не открыта";
         lbTotalTime->setText("Ошибка загрузки данных");
         return;
     }
 
-    QSqlQuery query(db);
+    QSqlQuery query(m_db);
     bool ok = query.exec(
         "SELECT app_name, SUM(duration_seconds) AS total "
         "FROM screen_intervals "
@@ -367,7 +435,6 @@ void screentimetracker::loadDataFromDb() {
     if (!ok) {
         qDebug() << "Ошибка запроса статистики:" << query.lastError().text();
         lbTotalTime->setText("Ошибка загрузки данных");
-        db.close();
         return;
     }
 
@@ -387,18 +454,60 @@ void screentimetracker::loadDataFromDb() {
     }
 
     lbTotalTime->setText("Общее время: " + formatDuration(grandTotal));
-
-    db.close();
 }
 
-QString screentimetracker::formatDuration(qint64 totalSeconds) {
-    int hours = totalSeconds / 3600;
-    int minutes = (totalSeconds % 3600) / 60;
-    int seconds = totalSeconds % 60;
+// void screentimetracker::loadDataFromDb() {
+//     QString connectionName = "stats_connection";
+//     QString todayStr = QDate::currentDate().toString("yyyy-MM-dd");
 
-    return QString("%1ч %2мин %3сек")
-        .arg(hours)
-        .arg(minutes, 2, 10, QChar('0'))
-        .arg(seconds, 2, 10, QChar('0'));
-}
+//     QSqlDatabase db;
+//     if (QSqlDatabase::contains(connectionName)) {
+//         db = QSqlDatabase::database(connectionName);
+//         db.close();
+//     } else {
+//         db = QSqlDatabase::addDatabase("QSQLITE", connectionName);
+//         // db.setDatabaseName(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/screentime.db");
+//         db.setDatabaseName(getDbPathForDate(todayStr));
 
+//     }
+
+//     if (!db.open()) {
+//         qDebug() << "Не удалось открыть БД для статистики:" << db.lastError().text();
+//         lbTotalTime->setText("Ошибка загрузки данных");
+//         return;
+//     }
+
+//     QSqlQuery query(db);
+//     bool ok = query.exec(
+//         "SELECT app_name, SUM(duration_seconds) AS total "
+//         "FROM screen_intervals "
+//         "GROUP BY app_name "
+//         "ORDER BY total DESC"
+//         );
+
+//     if (!ok) {
+//         qDebug() << "Ошибка запроса статистики:" << query.lastError().text();
+//         lbTotalTime->setText("Ошибка загрузки данных");
+//         db.close();
+//         return;
+//     }
+
+//     table->setRowCount(0);
+//     qint64 grandTotal = 0;
+//     int row = 0;
+
+//     while (query.next()) {
+//         QString appName = query.value("app_name").toString();
+//         qint64 totalSec = query.value("total").toLongLong();
+//         grandTotal += totalSec;
+
+//         table->insertRow(row);
+//         table->setItem(row, 0, new QTableWidgetItem(appName));
+//         table->setItem(row, 1, new QTableWidgetItem(formatDuration(totalSec)));
+//         row++;
+//     }
+
+//     lbTotalTime->setText("Общее время: " + formatDuration(grandTotal));
+
+//     db.close();
+// }
